@@ -16,7 +16,8 @@ class Traveler(db.Model):
     updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
     traveler_joined_trip = db.relationship('Trip', secondary = travelers_and_trips, backref='travelers_on_trip', cascade='all')
 
-# class Dog(db.Model):
+# dog data base not implemented but the code is written out 
+# class Dog(db.Model): 
 #     id = db.Column(db.Integer, primary_key=True)
 #     dog_name = db.Column(db.String(255))
 #     breed = db.Column(db.String(255))
@@ -24,6 +25,8 @@ class Traveler(db.Model):
 #     date_of_birth = db.Column(db.String(255))
 #     fur_color = db.Column(db.String(255))
 #     fur_type = db.Column(db.String(255))
+#     created_at = db.Column(db.DateTime, server_default=func.now())
+#     updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
 
     @classmethod
     def validate_traveler(cls, new_traveler_data):

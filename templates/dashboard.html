@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Travel Buddy - User Dashboard</title>
+    <title>Dog Buddy - User Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -22,6 +22,11 @@
             <li class="nav-item active">
                 <form action="/travels/add" method="POST">
                     <button class="btn btn-light">Add a Trip</button>
+                </form>
+            </li>
+            <li class="nav-item active">
+                <form action="/dog/add" method="POST">
+                    <button class="btn btn-light">Add Your Dog</button>
                 </form>
             </li>
             <li class="nav-item active">
@@ -105,7 +110,52 @@
         </table>
         <h5>Note: You may click on a destination to view more information.</h5>
     </div>
-
+<!-- your dogs list //I commented the ifs and fors (not tested yet)-->
+    <div class="container">
+        <!-- {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}   -->
+        <h2>Your Dogs:</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Breed</th>
+                <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- {% if your_dog %}
+                {% for dog in your_dog %}  -->
+                <tr>
+                    <td>
+                        <form action="/dog/{{ dog[0].id }}" method="POST">
+                            <input type="hidden" name="view_dog_id_value" value="{{ dog[0].id }}">
+                            <button class="btn btn-link">{{ dog[0].view }}</button>
+                        </form>
+                    </td>
+                    <!-- <td>{{ dog[0].dog_name }}</td>
+                    <td>{{ dog[0].breed }}</td> -->
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <form action="/remove" method="POST">
+                                <input type="hidden" name="remove_dog_value" value="{{ dog[0].id }}">
+                                <button class="btn btn-danger">remove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                <!-- {% endfor %}
+                {% endif %} -->
+            </tbody>
+        </table>
+        <!-- <h5>Note: You may click on your dog's name to view more information.</h5> -->
+    </div>
+    
     <div class="container">
         <h2>Other Users' Travel Plans:</h2>
         <table class="table table-striped">

@@ -5,6 +5,9 @@ from models import Traveler, Trip
 def home():
     return render_template("login.html")
 
+def welcomepage(): #renders welcomepage
+    return render_template("welcomepage.html")
+
 def register():
     validation_check = Traveler.validate_traveler(request.form)
     if "_flashes" in session.keys() or not validation_check:
