@@ -16,6 +16,15 @@ class Traveler(db.Model):
     updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
     traveler_joined_trip = db.relationship('Trip', secondary = travelers_and_trips, backref='travelers_on_trip', cascade='all')
 
+# class Dog(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     dog_name = db.Column(db.String(255))
+#     breed = db.Column(db.String(255))
+#     eye_color = db.Column(db.String(255))
+#     date_of_birth = db.Column(db.String(255))
+#     fur_color = db.Column(db.String(255))
+#     fur_type = db.Column(db.String(255))
+
     @classmethod
     def validate_traveler(cls, new_traveler_data):
         is_valid = True
@@ -113,7 +122,6 @@ class Trip(db.Model):
     @classmethod
     def cancel_trip(cls, cancel_trip_data):
         cancel_trip = Trip.query.filter(Trip.id == cancel_trip_data["cancelled_trip_value"]).delete()
-        print("cancel trip:", Trip.query.filter(Trip.id == cancel_trip_data["cancelled_trip_value"]))
         db.session.commit()
         flash("You cancelled this trip!")
         return cancel_trip
