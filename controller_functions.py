@@ -5,9 +5,6 @@ from models import Traveler, Trip
 def home():
     return render_template("login.html")
 
-def welcomepage(): #renders welcomepage
-    return render_template("welcomepage.html")
-
 def register():
     validation_check = Traveler.validate_traveler(request.form)
     if "_flashes" in session.keys() or not validation_check:
@@ -126,5 +123,5 @@ def see_view_trip_page(id):
 def logout():
     session['logged_in'] = False
     session.clear()
-    flash("You have been logged out. Thank you for visiting Travel Buddy.")
+    flash("You have been logged out. Thank you for visiting Dog Buddy.")
     return redirect('/')
