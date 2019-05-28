@@ -4,7 +4,7 @@ from controller_functions import home, register, login, dashboard, view_add_trip
 app.add_url_rule("/", view_func=home)
 app.add_url_rule("/register", view_func=register, methods=["POST"])
 app.add_url_rule("/login", view_func=login, methods=["POST"])
-app.add_url_rule("/travels", view_func=dashboard, methods=["GET", "POST"])
+app.add_url_rule("/dashboard", view_func=dashboard, methods=["GET", "POST"])
 app.add_url_rule("/travels/add", view_func=view_add_trip_page, methods=["GET", "POST"])
 app.add_url_rule("/add_trip", view_func=add_trip, methods=["POST"])
 app.add_url_rule("/travels/destination/<id>", view_func=see_view_trip_page, methods=["GET", "POST"])
