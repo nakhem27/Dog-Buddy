@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dog Buddy Login/Registration</title>
+    <title>Welcome to Dog Buddy! Login or Register.</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -18,111 +17,157 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Dog Buddy!</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <form action="/login" method="POST">
-                <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-2 col-form-label">Email:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="email">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/static/img/db_logo_blue.png" alt="db_logo" height="50">
+            Dog Buddy
+        </a>
+        <form action="/login" method="POST" class="form-inline needs-validation" novalidate>
+            <div class="form-row">
+                <div class="col mb-3">
+                    <label for="validationCustom01" class="inline">Email:</label>
+                    <input class="form-control mr-sm-2 ml-1 text-info" name="email" placeholder="Email" required>
+                    <div class="invalid-feedback mt-2">
+                        Please enter an email.
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="password">
+                <div class="col mb-3">
+                    <label for="validationCustom01">Password: </label>
+                    <input class="form-control mr-sm-2 ml-1 text-info" name="password" placeholder="Password" required>
+                    <div class="invalid-feedback mt-2">
+                        Please enter a password.
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
-                </div>
-            </form>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
-        </div>
+            </div>
+            <button class="btn btn-outline-info mt-2" type="submit">Login</button>
+        </form>
     </nav>
-    <!-- This section would be on the left side of the page -->
-    <div class="container">
-       <p> Want to find a doggy play date?</p>
-        <p>Sign up Today!</p>
-    </div>
-    <div class="container">
-        <h1>Welcome!</h1>
-        <div class="row">
-            <div class="col">
-                <h3>Register</h3>
-
-                <form action="/register" method="POST">
-
-                    <div class="form-group row">
-                        <label for="inputFirstName" class="col-sm-2 col-form-label">First Name:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="first_name"
-                                placeholder="Please enter in a first name.">
+    <div class="container-fluid bg-info">
+        <div class="row bg-info">
+            <div class="col m-5">
+                <h1>Welcome!</h1>
+                <h3 class="mb-3">Want to find a doggy play date?</h3>
+                <img src="/static/img/woman_with_dog.jpg" alt="default" width="400">
+                <h4 class="mt-3">Sign Up Today!</h4>
+            </div>
+            <div class="col m-5">
+                <h1>Create a New Account</h1>
+                <p>It's free!</p>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <span class="text-white">{{ message }}</span>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <form action="/register" method="post" class="needs-validation" novalidate>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                        <label for="validationCustom01">First name</label>
+                        <input type="text" class="form-control text-info" id="validationCustom01" name="first_name" placeholder="First name" required>
+                        <div class="invalid-feedback">
+                            Please enter a first name.
+                        </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                        <label for="validationCustom02">Last name</label>
+                        <input type="text" class="form-control text-info" id="validationCustom02" name="last_name" placeholder="Last name" required>
+                        <div class="invalid-feedback">
+                            Please enter a last name.
+                        </div>
                         </div>
                     </div>
-
-                    <div class="form-group row">
-                        <label for="inputLastName" class="col-sm-2 col-form-label">Last Name:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="last_name"
-                                placeholder="Please enter in a last name.">
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                        <label for="validationCustomUsername">Email</label>
+                        <input type="text" class="form-control text-info" id="validationCustom03" name="email" placeholder="Email" required>
+                        <div class="invalid-feedback">
+                        Please enter a valid email adddress.
+                        </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                        <label for="validationCustom01">Birthday</label>
+                        <input type="date" class="form-control text-info" id="validationCustom01" name="birthday" placeholder="birthday" required>
+                        <div class="invalid-feedback">
+                            Please enter a birthday.
+                        </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                        <label for="validationCustom01">Password</label>
+                        <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" required>
+                        <div class="invalid-feedback">
+                            Please enter a password.
+                        </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                        <label for="validationCustom01">Confirm Password</label>
+                        <input type="text" class="form-control text-info" id="validationCustom01" name="confirmpassword" placeholder="Confirm Password" required>
+                        <div class="invalid-feedback">
+                            Please enter a password.
+                        </div>
                         </div>
                     </div>
-
-                    <div class="form-group row">
-                        <label for="inputEmail" class="col-sm-2 col-form-label">Email:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="email"
-                                placeholder="Please enter in an email.">
+                    <div class="form-group">
+                        <div class="form-check">
+                        <input class="form-check-input mt-3" type="checkbox" value="" id="invalidCheck" required>
+                        <label class="form-check-label" for="invalidCheck">
+                        <button type="button" class="btn btn-link text-white mt-1" data-toggle="modal" data-target="#exampleModalScrollable">
+                            Agree to Terms and Conditions
+                        </button>
+                        </label>
+                        <div class="invalid-feedback">
+                            You must agree before submitting.
+                        </div>
                         </div>
                     </div>
-
-                    <div class="form-group row">
-                        <label for="inputBirthday" class="col-sm-2 col-form-label">Date of Birth:</label>
-                        <div class="col-sm-10">
-                            <input type="date" class="form-control" name="dob">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-2 col-form-label">Password:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="password" placeholder="Password">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="inputPasswordConfirmation" class="col-sm-2 col-form-label">Confirm Password:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="confirm_password"
-                                placeholder="Confirm Password">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Register</button>
-                        </div>
-                    </div>
+                    <button class="btn btn-light text-info" type="submit">Register</button>
                 </form>
             </div>
         </div>
+        <div class="row bg-light mt-5">
+            <span><small> © 2019 DOG BUDDY </small></span>
+            <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Terms and Conditions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>No stalking, fighting, or be banned for life.</p>
+                        <p>Some legal jargon</p>
+                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa beatae exercitationem delectus ut voluptates quis veritatis illo! Ullam necessitatibus expedita culpa accusantium libero totam, pariatur maiores. Libero deleniti quidem fugit!</p>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum similique consequuntur quis aspernatur tempore delectus quia ex sit provident, eum earum ut eos quibusdam vel repellat ullam a quae debitis.</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+<script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+            }, false);
+        });
+        }, false);
+    })();
+</script>
 </body>
 
 </html>

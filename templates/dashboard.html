@@ -13,195 +13,261 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Welcome {{ login_name }}!</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-            <li class="nav-item active">
-                <form action="/travels/add" method="POST">
-                    <button class="btn btn-light">Add a Trip</button>
-                </form>
-            </li>
-            <li class="nav-item active">
-                <form action="/dog/add" method="POST">
-                    <button class="btn btn-light">Add Your Dog</button>
-                </form>
-            </li>
-            <li class="nav-item active">
-                <form action="/logout" method="POST">
-                    <button class="btn btn-light">Logout</button>
-                </form>
-            </li>
+        <a class="navbar-brand" href="/dashboard">
+            <img src="/static/img/db_logo_blue.png" alt="db_logo" height="50">
+            Dog Buddy
+        </a>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <form action="/dashboard" method="POST">
+                        <button type="submit" class="btn btn-light">Home</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <form action="/myaccount" method="POST">
+                        <button type="submit" class="btn btn-light">My Account</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <button type="submit" class="btn btn-light" data-toggle="modal" data-target="#addadog">Add A Dog</button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#createwalk">Create A Walk</button>
+                </li>
+                <li class="nav-item">
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="btn btn-light">Logout</button>
+                    </form>
+                </li>
             </ul>
+            <span class="navbar-text text-info">
+                We love dogs!
+            </span>
         </div>
     </nav>
 
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}  
-        <h2>Your Trip Schedules:</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">Destination</th>
-                <th scope="col">Travel Start Date</th>
-                <th scope="col">Travel End Date</th>
-                <th scope="col">Plan</th>
-                <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if your_trips %}
-                {% for trip in your_trips %} 
-                <tr>
-                    <td>
-                        <form action="/travels/destination/{{ trip[0].id }}" method="POST">
-                            <input type="hidden" name="view_trip_id_value" value="{{ trip[0].id }}">
-                            <button class="btn btn-link">{{ trip[0].destination }}</button>
-                        </form>
-                    </td>
-                    <td>{{ trip[0].travel_start_date }}</td>
-                    <td>{{ trip[0].travel_end_date }}</td>
-                    <td>{{ trip[0].travel_plan }}</td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <form action="/cancel_trip" method="POST">
-                                <input type="hidden" name="cancelled_trip_value" value="{{ trip[0].id }}">
-                                <button class="btn btn-danger">Cancel Trip</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-                {% endif %}
+    <div class="container-fluid bg-info">
+        <div class="row">
+            <!-- {# anything in left side column goes here #} -->
+            <div class="col-sm-4">
+                <img src="/static/img/default_img.jpg" class="m-5" alt="defaultdogwithowner" width="400">
+                <h2 class="border-top">Your Dogs</h2>
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Breed</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td>name</td>
+                        <td>breed</td>
+                        <td>gender</td>
+                        <td>age</td>
+                        <td>action</td>
+                    </tbody>
+                </table>
+            </div>
+            <!-- {# end of left side div #} -->
 
-                {% if your_joined_trips %}
-                {% for joined_trip in your_joined_trips %}
-                <tr>
-                    <td>
-                        <form action="/travels/destination/{{ joined_trip[1].id }}" method="POST">
-                            <input type="hidden" name="view_trip_id_value" value="{{ joined_trip[1].id }}">
-                            <button class="btn btn-link">{{ joined_trip[1].destination }}</button>
-                        </form>
-                    </td>
-                    <td>{{ joined_trip[1].travel_start_date }}</td>
-                    <td>{{ joined_trip[1].travel_end_date }}</td>
-                    <td>{{ joined_trip[1].travel_plan }}</td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <form action="/leave_trip" method="POST">
-                                <input type="hidden" name="leave_trip_value" value="{{ joined_trip[1].id }}">
-                                <input type="hidden" name="your_id" value="{{ login_id }}">
-                                <button class="btn btn-danger">Leave Trip</button>
-                            </form>
+            <!-- {# anything in right side column goes here #} -->
+            <div class="col-sm-8">
+                <h1 class="m-5">Welcome Back {{ first_name }}!</h1>
+                <h4 class="mb-3">Your Upcoming Walks:</h4>
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                        <th scope="col">Location</th>
+                        <th scope="col">Dog(s)</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 class="mb-3">Your Past Walks:</h4>
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                        <th scope="col">Location</th>
+                        <th scope="col">Dog(s)</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <form action="/createwalk" method="POST" class="border-bottom mb-5">
+                    <button type="submit" class="btn btn-light text-info mb-5">Create A Walk</button>
+                </form>
+
+                <h4 class="mt-5 mb-3">Join A Walk:</h4>
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                        <th scope="col">Location</th>
+                        <th scope="col">Dog(s)</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Join This Walk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> 
+            <!-- {# end of column div above this line #} -->
+        </div> 
+        <div class="row bg-light mt-5">
+            <span><small> © 2019 DOG BUDDY </small></span>
+        </div>
+
+        <!-- {# pop up for create a walk #} -->
+        <div class="modal fade" id="createwalk" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create A Walk</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form action="/createwalk" method="POST" class="needs-validation" novalidate>
+                    <div class="modal-body">
+                        <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Location</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="location" placeholder="Location" required>
+                            <div class="invalid-feedback">
+                                Please add a location.
+                            </div>
                         </div>
-                    </td>
-                </tr>
-                {% endfor %}
-                {% endif %}
-            </tbody>
-        </table>
-        <h5>Note: You may click on a destination to view more information.</h5>
-    </div>
-<!-- your dogs list //I commented the ifs and fors (not tested yet)-->
-    <div class="container">
-        <!-- {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}   -->
-        <h2>Your Dogs:</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Breed</th>
-                <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- {% if your_dog %}
-                {% for dog in your_dog %}  -->
-                <tr>
-                    <td>
-                        <form action="/dog/{{ dog[0].id }}" method="POST">
-                            <input type="hidden" name="view_dog_id_value" value="{{ dog[0].id }}">
-                            <button class="btn btn-link">{{ dog[0].view }}</button>
-                        </form>
-                    </td>
-                    <!-- <td>{{ dog[0].dog_name }}</td>
-                    <td>{{ dog[0].breed }}</td> -->
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <form action="/remove" method="POST">
-                                <input type="hidden" name="remove_dog_value" value="{{ dog[0].id }}">
-                                <button class="btn btn-danger">remove</button>
-                            </form>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Date</label>
+                            <input type="date" class="form-control text-info" id="validationCustom01" name="date" required>
+                            <div class="invalid-feedback">
+                                Please choose a date.
+                            </div>
                         </div>
-                    </td>
-                </tr>
-                <!-- {% endfor %}
-                {% endif %} -->
-            </tbody>
-        </table>
-        <!-- <h5>Note: You may click on your dog's name to view more information.</h5> -->
-    </div>
-    
-    <div class="container">
-        <h2>Other Users' Travel Plans:</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Destination</th>
-                <th scope="col">Travel Start Date</th>
-                <th scope="col">Travel End Date</th>
-                <th scope="col">Do You Want to Join?</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if other_trips %}
-                {% for trip in other_trips %}
-              
-                <tr>
-                    <td>{{ trip[1].first_name }} {{ trip[1].last_name }}</td>
-                    <td>
-                        <form action="/travels/destination/{{ trip[0].id }}" method="POST">
-                        <input type="hidden" name="view_trip_id_value" value="{{ trip[0].id }}">
-                        <button class="btn btn-link">{{ trip[0].destination }}</button>
-                        </form>
-                    </td>
-                    <td>{{ trip[0].travel_start_date }}</td>
-                    <td>{{ trip[0].travel_end_date }}</td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <form action="/join_trip" method="POST">
-                                <input type="hidden" name="join_trip_value" value="{{ trip[0].id }}">
-                                <input type="hidden" name="your_id" value="{{ login_id }}">
-                                <button class="btn btn-info">Join Trip</button>
-                            </form>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Time</label>
+                            <input type="time" class="form-control text-info" id="validationCustom01" name="time" required>
+                            <div class="invalid-feedback">
+                                Please choose a time.
+                            </div>
                         </div>
-                    </td>
-                </tr>
-                </tr>
-              
-                {% endfor %}
-                {% endif %}
-            </tbody>
-        </table>
-        <div class="btn-group info" role="group" aria-label="Basic example">
-            <form action="/travels/add" method="POST">
-                <button class="btn btn-success"> Add a Trip </button>
-            </form>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Dog(s)</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" placeholder="Dogs" required>
+                            <div class="invalid-feedback">
+                                Please enter a first name.
+                            </div>
+                        </div>
+                        <div class="col-md-10 mb-3">
+                            <label for="validationCustom01">Comments About Walk For Other Buddies</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" placeholder="We are going on a big hike." required>
+                            <div class="invalid-feedback">
+                                Please enter a valid description.
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save Walk</button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- {# pop up for add a dog #} -->
+        <div class="modal fade" id="addadog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add A Dog</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form action="/addadog" method="POST" class="needs-validation" novalidate>
+                    <div class="modal-body">
+                        <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Name</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dog_name" placeholder="Name" required>
+                            <div class="invalid-feedback">
+                                Please add name.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Breed</label>
+                            <input type="type" class="form-control text-info" id="validationCustom01" name="breed" placeholder="Pug" required>
+                            <div class="invalid-feedback">
+                                Please add a breed.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Age</label>
+                            <input type="type" class="form-control text-info" id="validationCustom01" name="age" placeholder="10" required>
+                            <div class="invalid-feedback">
+                                Please add an age.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Gender</label>
+                            <select id="gender" name="gender" class="form-control text-info" required>
+                                <option value="">Choose...</option>
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Allergies</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="allergies" placeholder="Allergic to chicken">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Brief Bio (favorite food, toy...)</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" placeholder="Kobe Beef and socks.">
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add Dog</button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
         </div>
 
     </div>
