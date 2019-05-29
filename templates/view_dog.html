@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dog Buddy - User Dashboard</title>
+    <title>Dog Buddy - View Dog</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -46,181 +46,22 @@
             </span>
         </div>
     </nav>
-
-    <div class="container-fluid bg-info">
-        <div class="row">
-            <!-- {# anything in left side column goes here #} -->
-            <div class="col-sm-5">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p class="text-white">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-                {% endwith %}  
-                <img src="/static/img/woman_with_dog.jpg" class="m-5" alt="defaultdogwithowner" width="300">
-                <h2 class="border-top">Your Dogs</h2>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Breed</th>
-                        <th scope="col">Gender</th>
-                        <th scope="col">Age</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% if your_dogs %}
-                    {% for onedog in your_dogs %}
-                        <td>
-                            <form action="/dog/{{ onedog.id }}" method="POST">
-                                <input type="hidden" name="view_dog_id_value" value="{{ onedog.id }}">
-                                <button class="btn btn-link btn-sm" data-toggle="tooltip" data-placement="top" title="Click to View More Information About {{ onedog.dog_name }}">{{ onedog.dog_name }}</button>
-                            </form>
-                        </td>
-                        <td>{{ onedog.breed }}</td>
-                        <td>{{ onedog.gender }}</td>
-                        <td>{{ onedog.age }}</td>
-                    </tbody>
-                    {% endfor %}
-                    {% endif %}
-                </table>
+    <div class="container-fluid">
+        <div class="row m-5">
+            <div class="col">
+                {% for dog in one_dog %}
+                <h2>All About {{ dog.dog_name }}</h2>
+                <hr class="mb-3">
+                <h4>Breed: {{ dog.breed }}</h4>
+                <h4>Age: {{ dog.age }}</h4>
+                <h4>Eye Color: {{ dog.eye_color }}</h4>
+                <h4>Fur Color: {{ dog.fur_color }}</h4>
+                <h4>Fur Type: {{ dog.fur_type }}</h4>
+                <h4>Allergies: {{ dog.allergies }}</h4>
+                <h4>Brief Biography: {{ dog.brief_bio }}</h4>
+                {% endfor %}
             </div>
-            <!-- {# end of left side div #} -->
-
-            <!-- {# anything in right side column goes here #} -->
-            <div class="col-sm-6">
-                <h1 class="m-5">Welcome Back {{ login_name }}!</h1>
-                <h4 class="mb-3">Your Walks:</h4>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Location</th>
-                        <th scope="col">Dog(s)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% if your_walks %}
-                    {% for one_walk in your_walks %}
-                        <tr>
-                        <th scope="row">
-                            <form action="/view_walk/{{ one_walk[0].id }}" method="POST">
-                                <input type="hidden" name="view_walk_id_value" value="{{ one_walk[0].id }}">
-                                <button class="btn btn-link btn-sm" data-toggle="tooltip" data-placement="top" title="Click to View More Information About {{ one_walk[0].location }}">{{ one_walk[0].location }}</button>
-                            </form>
-                        </th>
-                        <td>{{ one_walk[0].dogs }}</td>
-                        <td>{{ one_walk[0].date }}</td>
-                        <td>{{ one_walk[0].time }}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="/cancel_walk" method="POST">
-                                    <input type="hidden" name="cancelled_walk_value" value="{{ one_walk[0].id }}">
-                                    <button class="btn btn-danger btn-sm">Cancel Trip</button>
-                                </form>
-                            </div>
-                        </td>
-                        </tr>
-                    {% endfor %}
-                    {% endif %}
-
-                    {% if your_joined_walks %}
-                    {% for joined_walk in your_joined_walks %}
-                    <tr>
-                        <td>
-                            <form action="/travels/destination/{{ joined_walk[1].id }}" method="POST">
-                                <input type="hidden" name="view_walk_id_value" value="{{ joined_walk[1].id }}">
-                                <button class="btn btn-link btn-sm">{{ joined_walk[1].location }}</button>
-                            </form>
-                        </td>
-                        <td>{{ joined_walk[1].dogs }}</td>
-                        <td>{{ joined_walk[1].date }}</td>
-                        <td>{{ joined_walk[1].time }}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="/leave_walk" method="POST">
-                                    <input type="hidden" name="leave_walk_value" value="{{ joined_walk[1].id }}">
-                                    <input type="hidden" name="your_id" value="{{ login_id }}">
-                                    <button class="btn btn-danger btn-sm">Leave Trip</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% endif %}
-                    </tbody>
-                </table>
-
-                <!-- {# <h4 class="mb-3">Your Past Walks:</h4>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Location</th>
-                        <th scope="col">Dog(s)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    {% if your_walks %}
-                    {% for one_walk in your_walks %}
-                    {% if {{ one_walk[0].date }} != {{ past }} %}
-                    <tbody>
-                        <tr>
-                        <th scope="row">1</th>
-                        <td></td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        </tr>
-                    </tbody>
-                    {% endif %}
-                    {% endfor %}
-                    {% endif %}
-                </table> #} -->
-
-                <button type="button" class="btn btn-light text-info" data-toggle="modal" data-target="#createwalk">Create A Walk</button>
-                <hr>
-                <h4 class="mt-5 mb-3">Join A Walk:</h4>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Location</th>
-                        <th scope="col">Dog(s)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Join This Walk</th>
-                        </tr>
-                    </thead>
-                    {% if other_walks %}
-                    {% for walk in other_walks %}
-                    <tbody>
-                        <tr>
-                        <td>
-                            <form action="/view_walk/{{ walk[0].id }}" method="POST">
-                                <input type="hidden" name="view_walk_id_value" value="{{ walk[0].id }}">
-                                <button class="btn btn-link btn-sm">{{ walk[0].location }}</button>
-                            </form>
-                        </td>
-                        <td>{{ walk[0].dogs }}</td>
-                        <td>{{ walk[0].date}}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="/join_walk" method="POST">
-                                    <input type="hidden" name="join_walk_value" value="{{ walk[0].id }}">
-                                    <input type="hidden" name="your_id" value="{{ login_id }}">
-                                    <button class="btn btn-info btn-sm">Join This Walk</button>
-                                </form>
-                            </div>
-                        </td>
-                        </tr>
-                    </tbody>
-                    {% endfor %}
-                    {% endif %}
-                </table>
-            </div> 
-            <!-- {# end of column div above this line #} -->
-        </div> 
+        </div>
         <div class="row bg-light mt-5">
             <span><small> © 2019 DOG BUDDY </small></span>
         </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dog Buddy - User Dashboard</title>
+    <title>Dog Buddy - My Account</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -25,7 +25,7 @@
                     </form>
                 </li>
                 <li class="nav-item">
-                    <form action="/myaccount" method="GET">
+                    <form action="/myaccount" method="POST">
                         <button type="submit" class="btn btn-light">My Account</button>
                     </form>
                 </li>
@@ -48,179 +48,155 @@
     </nav>
 
     <div class="container-fluid bg-info">
+        
         <div class="row">
-            <!-- {# anything in left side column goes here #} -->
-            <div class="col-sm-5">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p class="text-white">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-                {% endwith %}  
-                <img src="/static/img/woman_with_dog.jpg" class="m-5" alt="defaultdogwithowner" width="300">
-                <h2 class="border-top">Your Dogs</h2>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Breed</th>
-                        <th scope="col">Gender</th>
-                        <th scope="col">Age</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% if your_dogs %}
-                    {% for onedog in your_dogs %}
-                        <td>
-                            <form action="/dog/{{ onedog.id }}" method="POST">
-                                <input type="hidden" name="view_dog_id_value" value="{{ onedog.id }}">
-                                <button class="btn btn-link btn-sm" data-toggle="tooltip" data-placement="top" title="Click to View More Information About {{ onedog.dog_name }}">{{ onedog.dog_name }}</button>
-                            </form>
-                        </td>
-                        <td>{{ onedog.breed }}</td>
-                        <td>{{ onedog.gender }}</td>
-                        <td>{{ onedog.age }}</td>
-                    </tbody>
-                    {% endfor %}
-                    {% endif %}
-                </table>
-            </div>
-            <!-- {# end of left side div #} -->
+            <h2 class="m-5">Edit Account Information</h2>
+            <form action="/editaccount" method="POST" class="needs-validation m-5" novalidate>
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom01">First name</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="first_name" placeholder="First name" required>
+                    <div class="invalid-feedback">
+                        Please enter a first name.
+                    </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom02">Last name</label>
+                    <input type="text" class="form-control text-info" id="validationCustom02" name="last_name" placeholder="Last name" required>
+                    <div class="invalid-feedback">
+                        Please enter a last name.
+                    </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                    <label for="validationCustomUsername">Email</label>
+                    <input type="text" class="form-control text-info" id="validationCustom03" name="email" placeholder="Email" required>
+                    <div class="invalid-feedback">
+                    Please enter a valid email adddress.
+                    </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                    <label for="validationCustom01">Phone Number</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="phone_number" placeholder="Phone Number" required>
+                    <div class="invalid-feedback">
+                        Please enter a birthday.
+                    </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                    <label for="validationCustom01">Birthday</label>
+                    <input type="date" class="form-control text-info" id="validationCustom01" name="birthday" placeholder="birthday" required>
+                    <div class="invalid-feedback">
+                        Please enter a birthday.
+                    </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom01">Password</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" required>
+                    <div class="invalid-feedback">
+                        Please enter a password.
+                    </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom01">Confirm Password</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="confirm_password" placeholder="Confirm Password" required>
+                    <div class="invalid-feedback">
+                        Please enter a password.
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light text-info" type="submit">Edit Account Information</button>
+                </div>
+            </form>
+        </div>
 
-            <!-- {# anything in right side column goes here #} -->
-            <div class="col-sm-6">
-                <h1 class="m-5">Welcome Back {{ login_name }}!</h1>
-                <h4 class="mb-3">Your Walks:</h4>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Location</th>
-                        <th scope="col">Dog(s)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% if your_walks %}
-                    {% for one_walk in your_walks %}
-                        <tr>
-                        <th scope="row">
-                            <form action="/view_walk/{{ one_walk[0].id }}" method="POST">
-                                <input type="hidden" name="view_walk_id_value" value="{{ one_walk[0].id }}">
-                                <button class="btn btn-link btn-sm" data-toggle="tooltip" data-placement="top" title="Click to View More Information About {{ one_walk[0].location }}">{{ one_walk[0].location }}</button>
-                            </form>
-                        </th>
-                        <td>{{ one_walk[0].dogs }}</td>
-                        <td>{{ one_walk[0].date }}</td>
-                        <td>{{ one_walk[0].time }}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="/cancel_walk" method="POST">
-                                    <input type="hidden" name="cancelled_walk_value" value="{{ one_walk[0].id }}">
-                                    <button class="btn btn-danger btn-sm">Cancel Trip</button>
-                                </form>
-                            </div>
-                        </td>
-                        </tr>
-                    {% endfor %}
-                    {% endif %}
+        <div class="row">
+            <h2 class="m-5">Edit Dog(s) Information</h2>
+            {% for dog in your_dogs %}
+            
+            <form action="/editdog" method="POST" class="needs-validation m-5" novalidate>
+                <h4>{{ dog.dog_name }}</h4>
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom01">Name</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="dog_name" placeholder="{{ dog.dog_name }}" required>
+                    <div class="invalid-feedback">
+                        Please enter a Name.
+                    </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom02">Breed</label>
+                    <input type="text" class="form-control text-info" id="validationCustom02" name="breed" placeholder="{{ dog.breed }}" required>
+                    <div class="invalid-feedback">
+                        Please enter a breed.
+                    </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-3 mb-3">
+                    <label for="validationCustomUsername">Age</label>
+                    <input type="text" class="form-control text-info" id="validationCustom03" name="age" placeholder="{{ dog.age }}" required>
+                    <div class="invalid-feedback">
+                    Please enter an age.
+                    </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                    <label for="validationCustom01">Gender</label>
+                    <select id="gender" name="gender" class="form-control text-info" required>
+                        <option value="">Choose...</option>
+                        <option selected="{{ dog.gender }}">{{ dog.gender }}</option>
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please choose a gender.
+                    </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                    <label for="validationCustom01">Eye Color</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="eye_color" placeholder="{{ dog.eye_color }}" required>
+                    <div class="invalid-feedback">
+                        Please enter an eye color.
+                    </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                    <label for="validationCustom01">Fur Color</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="fur_color" placeholder="{{ dog.fur_color }}" required>
+                    <div class="invalid-feedback">
+                        Please enter a fur color.
+                    </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                    <label for="validationCustom01">Fur Type</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="fur_type" placeholder="{{ dog.fur_type }}" required>
+                    <div class="invalid-feedback">
+                        Please enter a fur type.
+                    </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom01">Allergies</label>
+                    <input type="type" class="form-control text-info" id="validationCustom01" name="allergies" placeholder="{{ dog.allergies }}" required>
+                    <div class="invalid-feedback">
+                        Please enter allergies or type None.
+                    </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                    <label for="validationCustom01">Brief Bio</label>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="brief_bio" placeholder="{{ dog.brief_bio }}" required>
+                    <div class="invalid-feedback">
+                        Please enter a short bio.
+                    </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light text-info" type="submit">Edit Dog Information</button>
+                    <input type="hidden" name="dog_id" value="{{ dog.id }}">
+                </div>
+            </form>
+            {% endfor %}
+        </div>
 
-                    {% if your_joined_walks %}
-                    {% for joined_walk in your_joined_walks %}
-                    <tr>
-                        <td>
-                            <form action="/travels/destination/{{ joined_walk[1].id }}" method="POST">
-                                <input type="hidden" name="view_walk_id_value" value="{{ joined_walk[1].id }}">
-                                <button class="btn btn-link btn-sm">{{ joined_walk[1].location }}</button>
-                            </form>
-                        </td>
-                        <td>{{ joined_walk[1].dogs }}</td>
-                        <td>{{ joined_walk[1].date }}</td>
-                        <td>{{ joined_walk[1].time }}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="/leave_walk" method="POST">
-                                    <input type="hidden" name="leave_walk_value" value="{{ joined_walk[1].id }}">
-                                    <input type="hidden" name="your_id" value="{{ login_id }}">
-                                    <button class="btn btn-danger btn-sm">Leave Trip</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% endif %}
-                    </tbody>
-                </table>
-
-                <!-- {# <h4 class="mb-3">Your Past Walks:</h4>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Location</th>
-                        <th scope="col">Dog(s)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    {% if your_walks %}
-                    {% for one_walk in your_walks %}
-                    {% if {{ one_walk[0].date }} != {{ past }} %}
-                    <tbody>
-                        <tr>
-                        <th scope="row">1</th>
-                        <td></td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        </tr>
-                    </tbody>
-                    {% endif %}
-                    {% endfor %}
-                    {% endif %}
-                </table> #} -->
-
-                <button type="button" class="btn btn-light text-info" data-toggle="modal" data-target="#createwalk">Create A Walk</button>
-                <hr>
-                <h4 class="mt-5 mb-3">Join A Walk:</h4>
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                        <th scope="col">Location</th>
-                        <th scope="col">Dog(s)</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Join This Walk</th>
-                        </tr>
-                    </thead>
-                    {% if other_walks %}
-                    {% for walk in other_walks %}
-                    <tbody>
-                        <tr>
-                        <td>
-                            <form action="/view_walk/{{ walk[0].id }}" method="POST">
-                                <input type="hidden" name="view_walk_id_value" value="{{ walk[0].id }}">
-                                <button class="btn btn-link btn-sm">{{ walk[0].location }}</button>
-                            </form>
-                        </td>
-                        <td>{{ walk[0].dogs }}</td>
-                        <td>{{ walk[0].date}}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <form action="/join_walk" method="POST">
-                                    <input type="hidden" name="join_walk_value" value="{{ walk[0].id }}">
-                                    <input type="hidden" name="your_id" value="{{ login_id }}">
-                                    <button class="btn btn-info btn-sm">Join This Walk</button>
-                                </form>
-                            </div>
-                        </td>
-                        </tr>
-                    </tbody>
-                    {% endfor %}
-                    {% endif %}
-                </table>
-            </div> 
-            <!-- {# end of column div above this line #} -->
-        </div> 
         <div class="row bg-light mt-5">
             <span><small> © 2019 DOG BUDDY </small></span>
         </div>
@@ -377,7 +353,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <input type="hidden" name="user_id" value="{{ login_id }}">
-                        <button type="submit" class="btn btn-primary">Add Dog</button>
+                        <button type="button" class="btn btn-primary">Add Dog</button>
                     </div>
                 </form>
 
@@ -387,20 +363,20 @@
     </div>
 <script>
     (function() {
-    'use strict';
-    window.addEventListener('load', function() {
-    var forms = document.getElementsByClassName('needs-validation');
-    var validation = Array.prototype.filter.call(forms, function(form) {
-        form.addEventListener('submit', function(event) {
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        form.classList.add('was-validated');
+        'use strict';
+        window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+            }, false);
+        });
         }, false);
-    });
-    }, false);
-})();
+    })();
 </script>
 </body>
 </html>
