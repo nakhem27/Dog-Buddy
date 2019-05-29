@@ -1,53 +1,43 @@
 from config import db, re, func, flash, bcrypt, datetime, timedelta
 
-travelers_and_trips = db.Table('travelers_and_trips',
-    db.Column('traveler_id', db.Integer, db.ForeignKey('traveler.id'), primary_key=True),
-    db.Column('trip_id', db.Integer, db.ForeignKey('trip.id'), primary_key=True)
+users_and_walks = db.Table('users_and_walks',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('walk_id', db.Integer, db.ForeignKey('walk.id'), primary_key=True)
 )
 
-class Traveler(db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     date_of_birth = db.Column(db.String(255))
+    phone_number = db.Column(db.String(255))
     password = db.Column(db.String(60))
+    image = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, server_default=func.now())
     updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
-    traveler_joined_trip = db.relationship('Trip', secondary = travelers_and_trips, backref='travelers_on_trip', cascade='all')
-
-# dog data base not implemented but the code is written out 
-class Dog(db.Model): 
-    id = db.Column(db.Integer, primary_key=True)
-    dog_name = db.Column(db.String(255))
-    breed = db.Column(db.String(255))
-    eye_color = db.Column(db.String(255))
-    date_of_birth = db.Column(db.String(255))
-    fur_color = db.Column(db.String(255))
-    fur_type = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, server_default=func.now())
-    updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
+    user_joined_walk = db.relationship('Walk', secondary = users_and_walks, backref='users_on_walk', cascade='all')
 
     @classmethod
-    def validate_traveler(cls, new_traveler_data):
+    def validate_user(cls, new_user_data):
         is_valid = True
-        if len(new_traveler_data["first_name"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_traveler_data["first_name"]):
+        if len(new_user_data["first_name"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_user_data["first_name"]):
             is_valid = False
             flash("Please enter a valid first name.")
-        if len(new_traveler_data["last_name"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_traveler_data["last_name"]):
+        if len(new_user_data["last_name"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_user_data["last_name"]):
             is_valid = False
             flash("Please enter a valid last name. Must be between 3-20 characters in length and contain no numbers or special characters.")
-        if len(new_traveler_data["email"]) < 1 or not re.search("[^@]+@[^@]+\.[^@]+", new_traveler_data["email"]):
+        if len(new_user_data["email"]) < 1 or not re.search("[^@]+@[^@]+\.[^@]+", new_user_data["email"]):
             is_valid = False
             flash("Please enter a valid email address containing @ AND . followed by com/org/etc.")
-        if len(new_traveler_data["password"]) < 8:
+        if len(new_user_data["phone_number"]) < 1 or not re.search("^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$", new_user_data["phone_number"]):
             is_valid = False
-            flash("Password should be at least 8 characters and contain one number and uppercase letter")
-        if new_traveler_data["confirm_password"] != new_traveler_data["password"]:
+            flash("Please enter a valid phone number.")
+        if new_user_data["confirm_password"] != new_user_data["password"]:
             is_valid = False
             flash("Passwords do not match!")
         try:
-            birthday = datetime.strptime(new_traveler_data["dob"], "%Y-%m-%d")
+            birthday = datetime.strptime(new_user_data["birthday"], "%Y-%m-%d")
             diff = datetime.now() - birthday
             if int(diff.total_seconds()) < 56764800:
                 is_valid = False
@@ -58,73 +48,171 @@ class Dog(db.Model):
         return is_valid
 
     @classmethod
-    def add_new_traveler(cls, new_traveler_data):
-        add_traveler = cls(
-            first_name = new_traveler_data["first_name"],
-            last_name = new_traveler_data["last_name"],
-            email = new_traveler_data["email"],
-            date_of_birth = new_traveler_data["dob"],
-            password = bcrypt.generate_password_hash(new_traveler_data["password"])
+    def add_new_user(cls, new_user_data):
+        add_user = cls(
+            first_name = new_user_data["first_name"],
+            last_name = new_user_data["last_name"],
+            email = new_user_data["email"],
+            phone_number = new_user_data["phone_number"],
+            date_of_birth = new_user_data["birthday"],
+            password = bcrypt.generate_password_hash(new_user_data["password"])
         )
-        db.session.add(add_traveler)
+        db.session.add(add_user)
         db.session.commit()
-        flash("User successfully added! Login to view the Travel Buddy Dashboard!")
-        return add_traveler
+        flash("User successfully added! Login to view the Dog Buddy Dashboard!")
+        return add_user
 
-class Trip(db.Model):
+    @classmethod
+    def edit_user(cls, edit_user_data):
+        edit_user = User.query.get(edit_user_data["login_id"])
+        edit_user.first_name = edit_user_data["first_name"]
+        edit_user.last_name = edit_user_data["last_name"]
+        edit_user.email = edit_user_data["email"]
+        edit_user.date_of_birth = edit_user_data["birthday"]
+        edit_user.phone_number = edit_user_data["phone_number"]
+        edit_user.password = edit_user_data["password"]
+        db.session.commit()
+        flash("User Information Updated")
+        return edit_user
+
+class Dog(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    planned_by_traveler_id = db.Column(db.Integer)
-    destination = db.Column(db.String(255))
-    travel_plan = db.Column(db.String(255))
-    travel_start_date = db.Column(db.String(255))
-    travel_end_date = db.Column(db.String(255))
+    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    dog_name = db.Column(db.String(255))
+    breed = db.Column(db.String(255))
+    age = db.Column(db.String(255))
+    gender = db.Column(db.String(255))
+    eye_color = db.Column(db.String(255))
+    fur_color = db.Column(db.String(255))
+    fur_type = db.Column(db.String(255))
+    allergies = db.Column(db.String(255))
+    brief_bio = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, server_default=func.now())
     updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
-    travelers_on_this_trip = db.relationship('Traveler', secondary = travelers_and_trips, backref='traveler_joins_trip', cascade='all')
-    
+    user_with_dog = db.relationship('User', backref='Dog', cascade='all')
+
     @classmethod
-    def validate_new_trip(cls, validate_trip):
+    def validate_dog(cls, new_dog_data):
         is_valid = True
-
-        if len(validate_trip["destination"]) < 1:
+        if len(new_dog_data["dog_name"]) < 1:
             is_valid = False
-            flash("Destination cannot be less than 1 character in length. Try again.")
-        if len(validate_trip["plan"]) < 1:
+            flash("Please enter a valid dog name.")
+        if len(new_dog_data["breed"]) < 1:
             is_valid = False
-            flash("Travel plan cannot be less than 1 character in length. Try again.")
-
-        if validate_trip["travel_start_date"] == "":
+            flash("Please enter a valid breed.")
+        if len(new_dog_data["age"]) < 0:
             is_valid = False
-            flash("Start travel date missing.")
-        elif validate_trip["travel_start_date"] < str(datetime.today()):
+            flash("Please enter a valid dog age.")
+        if len(new_dog_data["eye_color"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_dog_data["eye_color"]):
             is_valid = False
-            flash("This trip can't be created in the past or on today's date. Please create a trip starting with tomorrow's date.")
-        
-        if validate_trip["travel_end_date"] == "":
+            flash("Please enter a valid dog eye color.")
+        if len(new_dog_data["fur_color"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_dog_data["fur_color"]):
             is_valid = False
-            flash("End travel date missing.")
-        elif validate_trip["travel_end_date"] <= validate_trip["travel_start_date"]:
+            flash("Please enter a valid dog fur color.")
+        if len(new_dog_data["fur_type"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_dog_data["fur_type"]):
             is_valid = False
-            flash("End travel date can't end before the start date.")
+            flash("Please enter a valid fur type.")
+        if len(new_dog_data["allergies"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", new_dog_data["allergies"]):
+            is_valid = False
+            flash("Please enter a valid dog allergies.")
+        if len(new_dog_data["brief_bio"]) < 1 or len(new_dog_data["brief_bio"]) > 255:
+            is_valid = False
+            flash("Please enter a valid dog bio.")
         return is_valid
 
     @classmethod
-    def add_trip(cls, add_trip_data):
-        add_trip = cls(
-            planned_by_traveler_id = add_trip_data["user_id"],
-            destination = add_trip_data["destination"],
-            travel_plan = add_trip_data["plan"],
-            travel_start_date = add_trip_data["travel_start_date"],
-            travel_end_date = add_trip_data["travel_end_date"]
+    def add_dog(cls, new_dog_data):
+        add_dog = cls(
+            owner_id = new_dog_data["user_id"],
+            dog_name = new_dog_data["dog_name"],
+            breed = new_dog_data["breed"],
+            age = new_dog_data["age"],
+            gender = new_dog_data["gender"],
+            eye_color = new_dog_data["eye_color"],
+            fur_color = new_dog_data["fur_color"],
+            fur_type = new_dog_data["fur_type"],
+            allergies = new_dog_data["allergies"],
+            brief_bio = new_dog_data["brief_bio"]
         )
-        db.session.add(add_trip)
+        db.session.add(add_dog)
         db.session.commit()
-        flash("You added a trip!")
-        return add_trip
+        flash("Dog successfully added!")
+        return add_dog
+        
 
     @classmethod
-    def cancel_trip(cls, cancel_trip_data):
-        cancel_trip = Trip.query.filter(Trip.id == cancel_trip_data["cancelled_trip_value"]).delete()
+    def edit_dog(cls, edit_dog_data):
+        edit_dog = Dog.query.get(edit_dog_data["dog_id"])
+        edit_dog.name = edit_dog_data["dog_name"]
+        edit_dog.breed = edit_dog_data["breed"]
+        edit_dog.age = edit_dog_data["age"]
+        edit_dog.gender = edit_dog_data["gender"]
+        edit_dog.eye_color = edit_dog_data["eye_color"]
+        edit_dog.fur_color = edit_dog_data["fur_color"]
+        edit_dog.fur_type = edit_dog_data["fur_type"]
+        edit_dog.allergies = edit_dog_data["allergies"]
+        edit_dog.brief_bio = edit_dog_data["brief_bio"]
         db.session.commit()
-        flash("You cancelled this trip!")
-        return cancel_trip
+        flash("Dog Information Updated")
+        return edit_dog
+
+    @classmethod
+    def delete_dog(cls, delete_dog_data):
+        delete_dog = Dog.query.filter(Dog.id == delete_dog_data["dog_id"]).delete()
+        db.session.commit()
+        flash("Dog Information Deleted")
+        return delete_dog
+
+class Walk(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    planned_by_user_id = db.Column(db.Integer)
+    location = db.Column(db.String(255))
+    date = db.Column(db.String(255))
+    time = db.Column(db.String(255))
+    dogs = db.Column(db.String(255))
+    walk_info = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, server_default=func.now())
+    updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
+    users_on_this_walk = db.relationship('User', secondary = users_and_walks, backref='user_joins_walks', cascade='all')
+    
+    @classmethod
+    def validate_new_walk(cls, validate_new_walk):
+        is_valid = True
+        if len(validate_new_walk["location"]) < 1:
+            is_valid = False
+            flash("Location cannot be less than 1 character in length. Try again.")
+        if validate_new_walk["walk_date"] == "":
+            is_valid = False
+            flash("Walk date missing.")
+        elif validate_new_walk["walk_date"] < str(datetime.today()):
+            is_valid = False
+            flash("This walk can't be created in the past or on today's date. Please create a walk starting with tomorrow's date.")
+        if validate_new_walk["walk_time"] == "":
+            is_valid = False
+            flash("Please enter a time.")
+        if len(validate_new_walk["dogs"]) < 1:
+            is_valid = False
+            flash("You can't create a walk without dogs!")
+        return is_valid
+
+    @classmethod
+    def add_walk(cls, add_walk_data):
+        add_walk = cls(
+            planned_by_user_id = add_walk_data["user_id"],
+            location = add_walk_data["location"],
+            date = add_walk_data["walk_date"],
+            time = add_walk_data["walk_time"],
+            dogs = add_walk_data["dogs"],
+            walk_info = add_walk_data["walk_info"]
+        )
+        db.session.add(add_walk)
+        db.session.commit()
+        flash("You created a walk!")
+        return add_walk
+
+    @classmethod
+    def cancel_walk(cls, cancel_walk_data):
+        cancel_walk = Walk.query.filter(Walk.id == cancel_walk_data["cancelled_walk_value"]).delete()
+        db.session.commit()
+        flash("You cancelled this walk!")
+        return cancel_walk

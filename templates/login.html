@@ -19,7 +19,7 @@
 </head>
 <body>
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="/dashboard">
             <img src="/static/img/db_logo_blue.png" alt="db_logo" height="50">
             Dog Buddy
         </a>
@@ -57,7 +57,7 @@
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 {% for message in messages %}
-                <span class="text-white">{{ message }}</span>
+                <p class="text-white">{{ message }}</p>
                 {% endfor %}
                 {% endif %}
                 {% endwith %}
@@ -87,6 +87,13 @@
                         </div>
                         </div>
                         <div class="col-md-6 mb-3">
+                        <label for="validationCustomUsername">Phone Number</label>
+                        <input type="text" class="form-control text-info" id="validationCustom03" name="phone_number" placeholder="Phone Number" required>
+                        <div class="invalid-feedback">
+                        Please enter a valid phone number.
+                        </div>
+                        </div>
+                        <div class="col-md-10 mb-3">
                         <label for="validationCustom01">Birthday</label>
                         <input type="date" class="form-control text-info" id="validationCustom01" name="birthday" placeholder="birthday" required>
                         <div class="invalid-feedback">
@@ -95,14 +102,14 @@
                         </div>
                         <div class="col-md-6 mb-3">
                         <label for="validationCustom01">Password</label>
-                        <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" required>
+                        <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" aria-describedby="passwordHelpBlock" required>
                         <div class="invalid-feedback">
                             Please enter a password.
                         </div>
                         </div>
                         <div class="col-md-6 mb-3">
                         <label for="validationCustom01">Confirm Password</label>
-                        <input type="text" class="form-control text-info" id="validationCustom01" name="confirmpassword" placeholder="Confirm Password" required>
+                        <input type="text" class="form-control text-info" id="validationCustom01" name="confirm_password" placeholder="Confirm Password" aria-describedby="passwordHelpBlock" required>
                         <div class="invalid-feedback">
                             Please enter a password.
                         </div>
