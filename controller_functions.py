@@ -56,14 +56,45 @@ def dashboard():
     your_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).all()
     your_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).all()
     other_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id != login_id).all()
-    print(db.session.query(User, Walk).join(Walk, User.user_joined_walk))
-    print(other_walks)
-    return render_template("dashboard.html", login_name = login_name, login_id = login_id, your_dogs = your_dogs, your_walks = your_walks, your_joined_walks = your_joined_walks, other_walks = other_walks, past = past, present = present)
+    user_info = db.session.query(User).filter(User.id == login_id).all()
+
+    return render_template("dashboard.html", login_name = login_name, login_id = login_id, your_dogs = your_dogs, your_walks = your_walks, your_joined_walks = your_joined_walks, other_walks = other_walks, past = past, present = present, user_info = user_info)
 
 def myaccount():
     login_id = session["user_id"]
+    user_info = db.session.query(User).filter(User.id == login_id).all()
     your_dogs = db.session.query(Dog).filter(Dog.owner_id == login_id).all()
-    return render_template("myaccount.html", your_dogs = your_dogs)
+    first_name = user_info[0].first_name
+    last_name = user_info[0].last_name
+    email = user_info[0].email
+    birthday = user_info[0].date_of_birth
+    phone_number = user_info[0].phone_number
+    return render_template("myaccount.html", your_dogs = your_dogs, first_name = first_name, last_name = last_name, birthday = birthday, email = email, phone_number = phone_number, login_id = login_id)
+
+def setdefaultpic():
+    login_id = session["user_id"]
+    set_default = User.query.get(login_id)
+    set_default.image = "static/img/default_img.jpg"
+    db.session.commit()
+    flash("Photo set back to default")
+    return redirect("/dashboard")
+
+def changedefaultpic():
+    login_id = session["user_id"]
+    set_default = User.query.get(login_id)
+    set_default.image = request.form["change_photo"]
+    db.session.commit()
+    flash("Photo updated")
+    return redirect("/dashboard")
+
+def editaccount():
+    login_id = session["user_id"]
+    validation_check = User.validate_user(request.form)
+    if "_flashes" in session.keys() or not validation_check:
+        return redirect("/myaccount")
+    else:
+        edit_user = User.edit_user(request.form)
+        return redirect("/myaccount")
 
 def addadog():
     validation_check = Dog.validate_dog(request.form)
@@ -72,6 +103,10 @@ def addadog():
     else:
         new_dog = Dog.add_dog(request.form)
         return redirect("/dashboard")
+
+def delete_a_dog():
+    delete_a_dog = Dog.delete_dog(request.form)
+    return redirect("/dashboard")
 
 def viewdog(id):
     login_name = session["first_name"]
@@ -121,7 +156,7 @@ def see_view_walk_page(id):
     login_id = session["user_id"]
     your_dogs = db.session.query(Dog).filter(Dog.owner_id == login_id).all()
 
-    view_plan_with_creator = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(Walk.id == id).all()
+    view_plan_with_creator = db.session.query(User, Dog, Walk).filter(User.id == Dog.owner_id).filter(Walk.planned_by_user_id == User.id).filter(Walk.id == id).all()
     first_name = view_plan_with_creator[0].User.first_name
     last_name = view_plan_with_creator[0].User.last_name
     email = view_plan_with_creator[0].User.email
@@ -130,11 +165,10 @@ def see_view_walk_page(id):
     walk_time = view_plan_with_creator[0].Walk.time
     walk_location = view_plan_with_creator[0].Walk.location
     walk_info = view_plan_with_creator[0].Walk.walk_info
-    travel_start_date = view_plan_with_creator[0].Walk.travel_start_date
-    travel_end_date = view_plan_with_creator[0].Walk.travel_end_date
+    dogs_on_walk = view_plan_with_creator[0].Dog.dog_name
 
-    users_on_this_Walk = db.session.query(Walk, User).join(User, Walk.users_on_this_walk).filter(Walk.id == id).all()
-    return render_template("view.html", login_name = login_name, login_id = login_id, first_name = first_name, last_name = last_name, email = email, phone_number = phone_number, walk_date = walk_date, talk_time = walk_time, walk_location = walk_location, this_walk = users_on_this_walk, your_dogs = your_dogs)
+    users_on_this_walk = db.session.query(Walk, User).join(User, Walk.users_on_this_walk).filter(Walk.id == id).all()
+    return render_template("view_walk.html", login_name = login_name, login_id = login_id, first_name = first_name, last_name = last_name, email = email, phone_number = phone_number, walk_date = walk_date, walk_time = walk_time, walk_location = walk_location, walk_info = walk_info, this_walk = users_on_this_walk, your_dogs = your_dogs, dogs_on_walk = dogs_on_walk)
 
 def logout():
     session['logged_in'] = False

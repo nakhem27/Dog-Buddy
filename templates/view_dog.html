@@ -46,9 +46,9 @@
             </span>
         </div>
     </nav>
-    <div class="container-fluid">
-        <div class="row m-5">
-            <div class="col">
+    <div class="container-fluid bg-info">
+        <div class="row bg-info">
+            <div class="col m-5">
                 {% for dog in one_dog %}
                 <h2>All About {{ dog.dog_name }}</h2>
                 <hr class="mb-3">
@@ -103,11 +103,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom01">Dog(s)</label>
-                            <select class="custom-select" name="dogs">
-                                {% for dog in your_dogs %}
-                                <option value="{{ dog.id }}">{{ dog.dog_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" required>
                             <div class="invalid-feedback">
                                 Please enter a first name.
                             </div>

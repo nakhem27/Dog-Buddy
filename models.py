@@ -61,23 +61,6 @@ class User(db.Model):
         db.session.commit()
         flash("User successfully added! Login to view the Dog Buddy Dashboard!")
         return add_user
-    
-    # @classmethod
-    # def validate_edit_user(cls, edit_user_data):
-    #     is_valid = True
-    #     if len(edit_user_data["first_name"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", edit_user_data["first_name"]):
-    #         is_valid = False
-    #         flash("Please enter a valid first name.")
-    #     if len(edit_user_data["last_name"]) < 1 or re.search("[^a-zA-ZäöüßÄÖÜ]", edit_user_data["last_name"]):
-    #         is_valid = False
-    #         flash("Please enter a valid last name. Must be between 3-20 characters in length and contain no numbers or special characters.")
-    #     if len(edit_user_data["phone_number"]) < 1 or not re.search("^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$", edit_user_data["phone_number"]):
-    #         is_valid = False
-    #         flash("Please enter a valid phone number.")
-    #     if len(new_user_data["phone_number"]) < 1 or not re.search("^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$", new_user_data["phone_number"]):
-    #         is_valid = False
-    #         flash("Please enter a valid phone number.")
-    #     return is_valid
 
     @classmethod
     def edit_user(cls, edit_user_data):
@@ -85,7 +68,7 @@ class User(db.Model):
         edit_user.first_name = edit_user_data["first_name"]
         edit_user.last_name = edit_user_data["last_name"]
         edit_user.email = edit_user_data["email"]
-        edit_user.birthday = edit_user_data["birthday"]
+        edit_user.date_of_birth = edit_user_data["birthday"]
         edit_user.phone_number = edit_user_data["phone_number"]
         edit_user.password = edit_user_data["password"]
         db.session.commit()
@@ -175,7 +158,7 @@ class Dog(db.Model):
 
     @classmethod
     def delete_dog(cls, delete_dog_data):
-        delete_dog = Dog.query.filter(Dog.id == delete_dog_data["delete_dog"]).delete()
+        delete_dog = Dog.query.filter(Dog.id == delete_dog_data["dog_id"]).delete()
         db.session.commit()
         flash("Dog Information Deleted")
         return delete_dog

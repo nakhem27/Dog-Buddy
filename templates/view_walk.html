@@ -47,11 +47,51 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid bg-info">
+        <div class="row">
+            <div class="col m-5">
+                <h2 class="mt-5">View Walk Created By {{ first_name }} {{ last_name }}</h2>
+                <hr class="mb-3">
+                <h4>Location: {{ walk_location }}</h4>
+                <h4>When: {{ walk_date }}</h4>
+                <h4>Time: {{ walk_time }}</h4>
+                <h4>Dogs on Walk: {{ dogs_on_walk }}</h4>
+                <h4>Information: {{ walk_info }}</h4>
+                <p>Please contact {{ first_name }} {{ last_name }} at {{ email }} or {{ phone_number }} if needed.</p>
+                <p>Please refer to our 
+                    <button type="button" class="btn btn-link btn-sm text-danger" data-toggle="modal" data-target="#exampleModalScrollable">
+                    Terms and Conditions
+                    </button> 
+                in regards to our privacy policy.</p>
+            </div>
+        </div>
+
+
+
         <div class="row bg-light mt-5">
             <span><small> © 2019 DOG BUDDY </small></span>
         </div>
-
+        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Terms and Conditions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p>No stalking, fighting, or be banned for life.</p>
+                    <p>Some legal jargon</p>
+                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa beatae exercitationem delectus ut voluptates quis veritatis illo! Ullam necessitatibus expedita culpa accusantium libero totam, pariatur maiores. Libero deleniti quidem fugit!</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum similique consequuntur quis aspernatur tempore delectus quia ex sit provident, eum earum ut eos quibusdam vel repellat ullam a quae debitis.</p>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
         <!-- {# pop up for create a walk #} -->
         <div class="modal fade" id="createwalk" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -89,11 +129,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom01">Dog(s)</label>
-                            <select class="custom-select" name="dogs">
-                                {% for dog in your_dogs %}
-                                <option value="{{ dog.id }}">{{ dog.dog_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" required>
                             <div class="invalid-feedback">
                                 Please enter a first name.
                             </div>

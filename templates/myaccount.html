@@ -48,21 +48,27 @@
     </nav>
 
     <div class="container-fluid bg-info">
-        
         <div class="row">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="text-white">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
             <h2 class="m-5">Edit Account Information</h2>
             <form action="/editaccount" method="POST" class="needs-validation m-5" novalidate>
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">First name</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="first_name" placeholder="First name" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="first_name" placeholder="{{ first_name }}" value="{{ first_name }}" required>
                     <div class="invalid-feedback">
                         Please enter a first name.
                     </div>
                     </div>
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom02">Last name</label>
-                    <input type="text" class="form-control text-info" id="validationCustom02" name="last_name" placeholder="Last name" required>
+                    <input type="text" class="form-control text-info" id="validationCustom02" name="last_name" placeholder="{{ last_name }}" value="{{ last_name }}" required>
                     <div class="invalid-feedback">
                         Please enter a last name.
                     </div>
@@ -71,41 +77,42 @@
                 <div class="form-row">
                     <div class="col-md-4 mb-3">
                     <label for="validationCustomUsername">Email</label>
-                    <input type="text" class="form-control text-info" id="validationCustom03" name="email" placeholder="Email" required>
+                    <input type="text" class="form-control text-info" id="validationCustom03" name="email" placeholder="{{ email }}" value="{{ email }}" required>
                     <div class="invalid-feedback">
                     Please enter a valid email adddress.
                     </div>
                     </div>
                     <div class="col-md-4 mb-3">
                     <label for="validationCustom01">Phone Number</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="phone_number" placeholder="Phone Number" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="phone_number" placeholder="{{ phone_number }}" value="{{ phone_number }}" required>
                     <div class="invalid-feedback">
                         Please enter a birthday.
                     </div>
                     </div>
                     <div class="col-md-4 mb-3">
                     <label for="validationCustom01">Birthday</label>
-                    <input type="date" class="form-control text-info" id="validationCustom01" name="birthday" placeholder="birthday" required>
+                    <input type="date" class="form-control text-info" id="validationCustom01" name="birthday" placeholder="{{ birthday }}" value="{{ birthday }}" required>
                     <div class="invalid-feedback">
                         Please enter a birthday.
                     </div>
                     </div>
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">Password</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" aria-describedby="passwordHelpBlock" required>
                     <div class="invalid-feedback">
                         Please enter a password.
                     </div>
                     </div>
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">Confirm Password</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="confirm_password" placeholder="Confirm Password" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="confirm_password" placeholder="Confirm Password" aria-describedby="passwordHelpBlock" required>
                     <div class="invalid-feedback">
                         Please enter a password.
                     </div>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" name="login_id" value="{{ login_id }}">
                     <button class="btn btn-light text-info" type="submit">Edit Account Information</button>
                 </div>
             </form>
@@ -115,7 +122,7 @@
             <h2 class="m-5">Edit Dog(s) Information</h2>
             {% for dog in your_dogs %}
             
-            <form action="/editdog" method="POST" class="needs-validation m-5" novalidate>
+            <form action="/editdog" method="POST" class="needs-validation mt-5 ml-5 mr-5" novalidate>
                 <h4>{{ dog.dog_name }}</h4>
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
@@ -194,6 +201,11 @@
                     <input type="hidden" name="dog_id" value="{{ dog.id }}">
                 </div>
             </form>
+            
+            <form action="/delete_a_dog" method="POST" class="ml-5 mx-5">
+                <button class="btn btn-light text-danger" type="submit">Delete Dog Information</button>
+                <input type="hidden" name="dog_id" value="{{ dog.id }}">
+            </form>
             {% endfor %}
         </div>
 
@@ -238,11 +250,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom01">Dog(s)</label>
-                            <select class="custom-select" name="dogs">
-                                {% for dog in your_dogs %}
-                                <option value="{{ dog.id }}">{{ dog.dog_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" required>
                             <div class="invalid-feedback">
                                 Please enter a first name.
                             </div>
