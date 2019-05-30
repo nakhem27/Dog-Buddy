@@ -52,8 +52,8 @@
             <!-- {# anything in left side column goes here #} -->
             <div class="col-sm-4">
                 {% for user in user_info %}
-                <img src="{{ user.image }}" class="mt-5 ml-4" alt="user_picture" width="300">
-                <div class="row ml-4">
+                <img src="{{ user.image }}" class="mt-5 ml-4 rounded border border-secondary" alt="user_picture" width="350">
+                <div class="row ml-5">
                     <form class="form-inline my-2 my-lg-0" action="/setdefault" method="POST">
                         <button class="btn btn-info btn-sm">Set Default</button>
                     </form>
@@ -137,9 +137,10 @@
 
                     {% if your_joined_walks %}
                     {% for joined_walk in your_joined_walks %}
+                    
                     <tr>
                         <td>
-                            <form action="/travels/destination/{{ joined_walk[1].id }}" method="POST">
+                            <form action="/view_walk/{{ joined_walk[1].id }}" method="POST">
                                 <input type="hidden" name="view_walk_id_value" value="{{ joined_walk[1].id }}">
                                 <button class="btn btn-link btn-sm">{{ joined_walk[1].location }}</button>
                             </form>
@@ -271,6 +272,15 @@
                         <div class="col-md-6 mb-3">
                             <label for="validationCustom01">Dog(s)</label>
                             <input type="text" class="form-control text-info" id="validationCustom01" name="dogs" required>
+                            
+                            {#<select name="dogs" multiple>
+                                {% if your_dogs %}
+                                {% for onedog in your_dogs %}
+                                <option value="{{ onedog.dog_name }}">{{ onedog.dog_name }}</option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>#}
+                            
                             <div class="invalid-feedback">
                                 Please enter a first name.
                             </div>

@@ -49,6 +49,15 @@
 
     <div class="container-fluid bg-info">
         <div class="row">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="text-white m-5">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="row">
             <div class="col m-5">
                 <h2 class="mt-5">View Walk Created By {{ first_name }} {{ last_name }}</h2>
                 <hr class="mb-3">
@@ -58,11 +67,35 @@
                 <h4>Dogs on Walk: {{ dogs_on_walk }}</h4>
                 <h4>Information: {{ walk_info }}</h4>
                 <p>Please contact {{ first_name }} {{ last_name }} at {{ email }} or {{ phone_number }} if needed.</p>
+                <h4>Other users' joining the walk:</h4>
+                {% if users_on_this_walk %}
+                {% for user in users_on_this_walk %}
+                <div class="row">
+                    <ul>
+                        <li><strong>Name: {{ user[1].first_name }} {{ user[1].last_name }}</strong></li>
+                        <li><strong>Contact Info: {{ user[1].email }} or {{ user[1].phone_number }}</strong></li>
+                        <li><strong>Dogs:{% for dog in all_dogs %}{% if dog.owner_id == user[1].id %}  <a href="/dog/{{ dog.id }}" class="text-white">{{ dog.dog_name }}</a> | {% endif %} {% endfor %}</strong></li>
+                        
+                    </ul>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No other users joined this walk at this time.</p>
+                {% endif %}
                 <p>Please refer to our 
                     <button type="button" class="btn btn-link btn-sm text-danger" data-toggle="modal" data-target="#exampleModalScrollable">
                     Terms and Conditions
                     </button> 
                 in regards to our privacy policy.</p>
+                {% if allquery %}
+                {% for query in allquery %}
+                {% if login_id == query[1].planned_by_user_id %}
+                <form action="/edit_walk" method="POST">
+                    <button type="button" class="btn btn-light text-info btn-sm" data-toggle="modal" data-target="#editwalk">Edit This Walk</button>
+                </form>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
 
@@ -153,6 +186,74 @@
                 </div>
             </div>
         </div>
+
+        {% if allquery %}
+        {% for query in allquery %}
+        {% if login_id == query[1].planned_by_user_id %}
+        <!-- {# pop up for edit a walk #} -->
+        <div class="modal fade" id="editwalk" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit A Walk</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form action="/edit_walk/{{ query[1].id }}" method="POST" class="needs-validation" novalidate>
+                    <div class="modal-body">
+                        <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Location</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="location" placeholder="{{ query[1].location }}" value="{{ query[1].location }}" required>
+                            <div class="invalid-feedback">
+                                Please add a location.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Date</label>
+                            <input type="date" class="form-control text-info" id="validationCustom01" name="walk_date" placeholder="{{ query[1].date }}" value="{{ query[1].date }}" required>
+                            <div class="invalid-feedback">
+                                Please choose a date.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Time</label>
+                            <input type="time" class="form-control text-info" id="validationCustom01" name="walk_time" placeholder="{{ query[1].time }}" value="{{ query[1].time }}" required>
+                            <div class="invalid-feedback">
+                                Please choose a time.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationCustom01">Dog(s)</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="dogs"  placeholder="{{ query[1].dogs }}"  value="{{ query[1].dogs }}" required>
+                            <div class="invalid-feedback">
+                                Please enter dogs.
+                            </div>
+                        </div>
+                        <div class="col-md-10 mb-3">
+                            <label for="validationCustom01">Comments About Walk For Other Buddies</label>
+                            <input type="text" class="form-control text-info" id="validationCustom01" name="walk_info" placeholder="{{ query[1].walk_info }}" value="{{ query[1].walk_info }}" required>
+                            <div class="invalid-feedback">
+                                Please enter a valid description.
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="hidden" name="edit_walk_value" value="{{ query[1].id }}">
+                        <button class="btn btn-primary">Save Edited Walk</button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
 
         <!-- {# pop up for add a dog #} -->
         <div class="modal fade" id="addadog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

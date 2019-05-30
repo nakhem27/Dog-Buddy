@@ -70,14 +70,14 @@ class User(db.Model):
         edit_user.email = edit_user_data["email"]
         edit_user.date_of_birth = edit_user_data["birthday"]
         edit_user.phone_number = edit_user_data["phone_number"]
-        edit_user.password = edit_user_data["password"]
+        edit_user.password = bcrypt.generate_password_hash(edit_user_data["password"])
         db.session.commit()
         flash("User Information Updated")
         return edit_user
 
 class Dog(db.Model): 
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    owner_id = db.Column(db.Integer)
     dog_name = db.Column(db.String(255))
     breed = db.Column(db.String(255))
     age = db.Column(db.String(255))
@@ -153,7 +153,7 @@ class Dog(db.Model):
         edit_dog.allergies = edit_dog_data["allergies"]
         edit_dog.brief_bio = edit_dog_data["brief_bio"]
         db.session.commit()
-        flash("Dog Information Updated")
+        flash(edit_dog.name +"'s Information Was Updated")
         return edit_dog
 
     @classmethod
@@ -200,8 +200,8 @@ class Walk(db.Model):
         add_walk = cls(
             planned_by_user_id = add_walk_data["user_id"],
             location = add_walk_data["location"],
-            date = add_walk_data["walk_date"],
-            time = add_walk_data["walk_time"],
+            date = datetime.strptime(add_walk_data["walk_date"], '%Y-%m-%d').strftime('%A, %B %d, %Y'),
+            time = datetime.strptime(add_walk_data["walk_time"], '%H:%M').strftime('%I:%M %p'), 
             dogs = add_walk_data["dogs"],
             walk_info = add_walk_data["walk_info"]
         )
@@ -209,6 +209,20 @@ class Walk(db.Model):
         db.session.commit()
         flash("You created a walk!")
         return add_walk
+    
+    @classmethod
+    def edit_walk(cls, edit_walk_data):
+        edit_walk = Walk.query.get(edit_walk_data["edit_walk_value"])
+        edit_walk.location = edit_walk_data["location"]
+        edit_walk.date = datetime.strptime(edit_walk_data["walk_date"], '%Y-%m-%d').strftime('%A, %B %d, %Y')
+        edit_walk.time = datetime.strptime(edit_walk_data["walk_time"], '%H:%M').strftime('%I:%M %p')
+        edit_walk.dogs = edit_walk_data["dogs"]
+        edit_walk.walk_info = edit_walk_data["walk_info"]
+        db.session.add(edit_walk)
+        db.session.commit()
+        flash("Walk Information Updated")
+        return edit_walk
+
 
     @classmethod
     def cancel_walk(cls, cancel_walk_data):

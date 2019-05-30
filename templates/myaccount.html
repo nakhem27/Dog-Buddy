@@ -49,13 +49,15 @@
 
     <div class="container-fluid bg-info">
         <div class="row">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p class="text-white">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-                {% endwith %}
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="text-white m-5">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="row">
             <h2 class="m-5">Edit Account Information</h2>
             <form action="/editaccount" method="POST" class="needs-validation m-5" novalidate>
                 <div class="form-row">
@@ -127,14 +129,14 @@
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">Name</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="dog_name" placeholder="{{ dog.dog_name }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="dog_name" placeholder="{{ dog.dog_name }}" value="{{ dog.dog_name }}" required>
                     <div class="invalid-feedback">
                         Please enter a Name.
                     </div>
                     </div>
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom02">Breed</label>
-                    <input type="text" class="form-control text-info" id="validationCustom02" name="breed" placeholder="{{ dog.breed }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom02" name="breed" placeholder="{{ dog.breed }}" value="{{ dog.breed }}" required>
                     <div class="invalid-feedback">
                         Please enter a breed.
                     </div>
@@ -143,7 +145,7 @@
                 <div class="form-row">
                     <div class="col-md-3 mb-3">
                     <label for="validationCustomUsername">Age</label>
-                    <input type="text" class="form-control text-info" id="validationCustom03" name="age" placeholder="{{ dog.age }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom03" name="age" placeholder="{{ dog.age }}" value="{{ dog.age }}"required>
                     <div class="invalid-feedback">
                     Please enter an age.
                     </div>
@@ -162,35 +164,35 @@
                     </div>
                     <div class="col-md-2 mb-3">
                     <label for="validationCustom01">Eye Color</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="eye_color" placeholder="{{ dog.eye_color }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="eye_color" placeholder="{{ dog.eye_color }}" value="{{ dog.eye_color }}" required>
                     <div class="invalid-feedback">
                         Please enter an eye color.
                     </div>
                     </div>
                     <div class="col-md-3 mb-3">
                     <label for="validationCustom01">Fur Color</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="fur_color" placeholder="{{ dog.fur_color }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="fur_color" placeholder="{{ dog.fur_color }}" value="{{ dog.fur_color }}" required>
                     <div class="invalid-feedback">
                         Please enter a fur color.
                     </div>
                     </div>
                     <div class="col-md-2 mb-3">
                     <label for="validationCustom01">Fur Type</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="fur_type" placeholder="{{ dog.fur_type }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="fur_type" placeholder="{{ dog.fur_type }}" value="{{ dog.fur_type }}" required>
                     <div class="invalid-feedback">
                         Please enter a fur type.
                     </div>
                     </div>
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">Allergies</label>
-                    <input type="type" class="form-control text-info" id="validationCustom01" name="allergies" placeholder="{{ dog.allergies }}" required>
+                    <input type="type" class="form-control text-info" id="validationCustom01" name="allergies" placeholder="{{ dog.allergies }}" value="{{ dog.allergies }}" required>
                     <div class="invalid-feedback">
                         Please enter allergies or type None.
                     </div>
                     </div>
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">Brief Bio</label>
-                    <input type="text" class="form-control text-info" id="validationCustom01" name="brief_bio" placeholder="{{ dog.brief_bio }}" required>
+                    <input type="text" class="form-control text-info" id="validationCustom01" name="brief_bio" placeholder="{{ dog.brief_bio }}" value="{{ dog.brief_bio }}" required>
                     <div class="invalid-feedback">
                         Please enter a short bio.
                     </div>
@@ -361,7 +363,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <input type="hidden" name="user_id" value="{{ login_id }}">
-                        <button type="button" class="btn btn-primary">Add Dog</button>
+                        <button class="btn btn-primary">Add Dog</button>
                     </div>
                 </form>
 

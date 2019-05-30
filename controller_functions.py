@@ -97,10 +97,9 @@ def editaccount():
         return redirect("/myaccount")
 
 # added edit dog
-def editdog():
-    dog_id = session["user_id"] #THIS maybe wrong? 
+def editdog(): 
     validation_check = Dog.validate_dog(request.form)
-    if "_flashes" in session.key() or not validation_check:
+    if "_flashes" in session.keys() or not validation_check:
         return redirect("/myaccount")
     else:
         edit_dog = Dog.edit_dog(request.form)
@@ -116,7 +115,7 @@ def addadog():
 
 def delete_a_dog():
     delete_a_dog = Dog.delete_dog(request.form)
-    return redirect("/dashboard")
+    return redirect("/myaccount")
 
 def viewdog(id):
     login_name = session["first_name"]
@@ -130,6 +129,7 @@ def add_walk():
     if "_flashes" in session.keys() or not validation_check:
         return redirect("/dashboard")
     else:
+        print(request.form["dogs"])
         new_walk = Walk.add_walk(request.form)
         return redirect("/dashboard")
 
@@ -164,9 +164,10 @@ def join_walk():
 def see_view_walk_page(id):
     login_name = session["first_name"]
     login_id = session["user_id"]
-    your_dogs = db.session.query(Dog).filter(Dog.owner_id == login_id).all()
+    your_dogs = Dog.query.all()
 
-    view_plan_with_creator = db.session.query(User, Dog, Walk).filter(User.id == Dog.owner_id).filter(Walk.planned_by_user_id == User.id).filter(Walk.id == id).all()
+    # view_plan_with_creator = db.session.query(User, Dog, Walk).filter(User.id == Dog.owner_id).filter(Walk.planned_by_user_id == User.id).filter(Walk.id == id).all()
+    view_plan_with_creator = db.session.query(User, Walk).filter(Walk.planned_by_user_id == User.id).filter(Walk.id == id).all()
     first_name = view_plan_with_creator[0].User.first_name
     last_name = view_plan_with_creator[0].User.last_name
     email = view_plan_with_creator[0].User.email
@@ -175,10 +176,19 @@ def see_view_walk_page(id):
     walk_time = view_plan_with_creator[0].Walk.time
     walk_location = view_plan_with_creator[0].Walk.location
     walk_info = view_plan_with_creator[0].Walk.walk_info
-    dogs_on_walk = view_plan_with_creator[0].Dog.dog_name
+    dogs_on_walk = view_plan_with_creator[0].Walk.dogs
+    # dogs_on_walk = view_plan_with_creator[0].Dog.dog_name
 
     users_on_this_walk = db.session.query(Walk, User).join(User, Walk.users_on_this_walk).filter(Walk.id == id).all()
-    return render_template("view_walk.html", login_name = login_name, login_id = login_id, first_name = first_name, last_name = last_name, email = email, phone_number = phone_number, walk_date = walk_date, walk_time = walk_time, walk_location = walk_location, walk_info = walk_info, this_walk = users_on_this_walk, your_dogs = your_dogs, dogs_on_walk = dogs_on_walk)
+    return render_template("view_walk.html", login_name = login_name, login_id = login_id, first_name = first_name, last_name = last_name, email = email, phone_number = phone_number, walk_date = walk_date, walk_time = walk_time, walk_location = walk_location, walk_info = walk_info, this_walk = users_on_this_walk, all_dogs = your_dogs, dogs_on_walk = dogs_on_walk, allquery = view_plan_with_creator, users_on_this_walk = users_on_this_walk)
+
+def edit_walk(id):
+    validation_check = Walk.validate_new_walk(request.form)
+    if "_flashes" in session.keys() or not validation_check:
+        return redirect("/view_walk/" + str(id))
+    else:
+        edit_walk = Walk.edit_walk(request.form)
+        return redirect("/view_walk/" + str(id))
 
 def logout():
     session['logged_in'] = False
