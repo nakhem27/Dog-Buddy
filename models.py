@@ -55,7 +55,8 @@ class User(db.Model):
             email = new_user_data["email"],
             phone_number = new_user_data["phone_number"],
             date_of_birth = new_user_data["birthday"],
-            password = bcrypt.generate_password_hash(new_user_data["password"])
+            password = bcrypt.generate_password_hash(new_user_data["password"]),
+            image = "static/img/default_img.jpg"
         )
         db.session.add(add_user)
         db.session.commit()
@@ -89,7 +90,7 @@ class Dog(db.Model):
     brief_bio = db.Column(db.String(255))
     created_at = db.Column(db.DateTime, server_default=func.now())
     updated_at = db.Column(db.DateTime, server_default=func.now(), onupdate=func.now())
-    user_with_dog = db.relationship('User', backref='Dog', cascade='all')
+    # user_with_dog = db.relationship('User', backref='Dog', cascade='all')
 
     @classmethod
     def validate_dog(cls, new_dog_data):
