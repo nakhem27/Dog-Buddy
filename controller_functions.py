@@ -96,6 +96,16 @@ def editaccount():
         edit_user = User.edit_user(request.form)
         return redirect("/myaccount")
 
+# added edit dog
+def editdog():
+    dog_id = session["user_id"] #THIS maybe wrong? 
+    validation_check = Dog.validate_dog(request.form)
+    if "_flashes" in session.key() or not validation_check:
+        return redirect("/myaccount")
+    else:
+        edit_dog = Dog.edit_dog(request.form)
+        return redirect("/myaccount")         
+
 def addadog():
     validation_check = Dog.validate_dog(request.form)
     if "_flashes" in session.keys() or not validation_check:
