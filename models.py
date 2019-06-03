@@ -137,7 +137,7 @@ class Dog(db.Model):
         )
         db.session.add(add_dog)
         db.session.commit()
-        flash("Dog successfully added!")
+        flash(new_dog_data["dog_name"]+" successfully added!")
         return add_dog
         
 
@@ -159,9 +159,10 @@ class Dog(db.Model):
 
     @classmethod
     def delete_dog(cls, delete_dog_data):
+        delete_dog_name = delete_dog_data["dog_name"]
         delete_dog = Dog.query.filter(Dog.id == delete_dog_data["dog_id"]).delete()
         db.session.commit()
-        flash("Dog Information Deleted")
+        flash("Information About "+ delete_dog_name +" Deleted")
         return delete_dog
 
 class Walk(db.Model):

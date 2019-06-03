@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -86,6 +87,14 @@
                     {% endfor %}
                     {% endif %}
                 </table>
+                
+                <div class="endpoint breeds-image-random border-top">
+                    <div class="image">
+                    <h4 class="mt-3">Click For A Random Dog Image</h4>
+                    <a href="javascript:void(0);" class="get-dog btn btn-light text-info m-2">Fetch!</a>
+                    <div class="image-content ml-4"><img src="https://images.dog.ceo/breeds/stbernard/n02109525_15376.jpg"></div>
+                    </div>
+                </div>
             </div>
             <!-- {# end of left side div #} -->
 
@@ -99,7 +108,7 @@
                     {% endfor %}
                 {% endif %}
                 {% endwith %}
-                <h4 class="mb-3">Your Walks:</h4>
+                <h4 class="mb-3">Your Upcoming Walks:</h4>
                 <table class="table table-sm table-secondary">
                     <thead>
                         <tr>
@@ -163,31 +172,57 @@
                     </tbody>
                 </table>
 
-                <!-- {# <h4 class="mb-3">Your Past Walks:</h4>
+                <h4 class="mb-3">Your Past Walks:</h4>
                 <table class="table table-sm table-secondary">
                     <thead>
                         <tr>
                         <th scope="col">Location</th>
                         <th scope="col">Dog(s)</th>
                         <th scope="col">Date</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">Created By</th>
                         </tr>
                     </thead>
-                    {% if your_walks %}
-                    {% for one_walk in your_walks %}
-                    {% if {{ one_walk[0].date }} != {{ past }} %}
+                    {% if past_walks %}
+                    {% for one_walk in past_walks %}
+                    
                     <tbody>
                         <tr>
-                        <th scope="row">1</th>
-                        <td></td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
+                        <td>
+                            <form action="/view_walk/{{ one_walk[0].id }}" method="POST">
+                            <input type="hidden" name="view_walk_id_value" value="{{ one_walk[0].id }}">
+                            <button class="btn btn-link btn-sm" data-toggle="tooltip" data-placement="top" title="Click to View More Information About {{ one_walk[0].location }}">{{ one_walk[0].location }}</button>
+                            </form>
+                        </td>
+                        <td>{{ one_walk[0].dogs }}</td>
+                        <td>{{ one_walk[0].date }}</td>
+                        <td>You</td>
                         </tr>
+
+                        {% if past_joined_walks %}
+                        {% for joined_walk in past_joined_walks %}
+                    
+                        <tr>
+                        <td>
+                            <form action="/view_walk/{{ joined_walk[1].id }}" method="POST">
+                                <input type="hidden" name="view_walk_id_value" value="{{ joined_walk[1].id }}">
+                                <button class="btn btn-link btn-sm">{{ joined_walk[1].location }}</button>
+                            </form>
+                        </td>
+                        <td>{{ joined_walk[1].dogs }}</td>
+                        <td>{{ joined_walk[1].date }}</td>
+                        {% for user in all_users %}
+                        {% if user["id"] == joined_walk[1].planned_by_user_id %}
+                        <td>{{ user["first_name"] }}</td>
+                        {% endif %}
+                        {% endfor %}
+                        </tr>
+                        {% endfor %}
+                        {% endif %}
                     </tbody>
-                    {% endif %}
+                   
                     {% endfor %}
                     {% endif %}
-                </table> #} -->
+                </table>
 
                 <button type="button" class="btn btn-light text-info" data-toggle="modal" data-target="#createwalk">Create A Walk</button>
                 <hr>
@@ -227,8 +262,10 @@
                     {% endfor %}
                     {% endif %}
                 </table>
+                <hr>
             </div> 
             <!-- {# end of column div above this line #} -->
+            
         </div> 
         <div class="row bg-light mt-5">
             <span><small> © 2019 DOG BUDDY </small></span>
@@ -447,6 +484,40 @@
     });
     }, false);
 })();
+
+
+function getDog(){
+            $.getJSON("https://dog.ceo/api/breeds/image/random", function( data ) {
+                $(".breeds-image-random pre").html(JSON.stringify(data, null, 4));
+                $(".image-content").html("<img src='" + data.message + "' width='300'>");
+            });
+        }
+
+        function getMultipleDogs(){
+            $(".image-content-multiple").empty();
+            $.getJSON("https://dog.ceo/api/breeds/image/random/3", function( data ) {
+                $(".breeds-image-random-multiple pre").html(JSON.stringify(data, null, 4));
+
+                $.each(data.message, function(index, item) {
+                    $(".image-content-multiple").append("<img src='" + item + "' width='300'>");
+                });
+            });
+        }
+
+        $('.get-dog').click(function(){
+            getDog();
+        });
+
+        $('.get-dog-multiple').click(function(){
+            getMultipleDogs(); 
+        });
+
+        $(document).ready(function() {
+            getDog();
+            getMultipleDogs();
+        });
+
+    
 </script>
 </body>
 </html>

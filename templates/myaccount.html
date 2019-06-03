@@ -58,8 +58,8 @@
             {% endwith %}
         </div>
         <div class="row">
-            <h2 class="m-5">Edit Account Information</h2>
-            <form action="/editaccount" method="POST" class="needs-validation m-5" novalidate>
+            <h2 class="ml-5 mt-5">Edit Account Information</h2>
+            <form action="/editaccount" method="POST" class="needs-validation m-5 ml-5 mr-5" novalidate>
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
                     <label for="validationCustom01">First name</label>
@@ -121,7 +121,7 @@
         </div>
 
         <div class="row">
-            <h2 class="m-5">Edit Dog(s) Information</h2>
+            <h2 class="ml-5 mt-5">Edit Dog(s) Information</h2>
             {% for dog in your_dogs %}
             
             <form action="/editdog" method="POST" class="needs-validation mt-5 ml-5 mr-5" novalidate>
@@ -199,15 +199,34 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-light text-info" type="submit">Edit Dog Information</button>
+                    <button class="btn btn-light text-info" type="submit">Edit {{ dog.dog_name }}'s Information</button>
                     <input type="hidden" name="dog_id" value="{{ dog.id }}">
                 </div>
             </form>
             
-            <form action="/delete_a_dog" method="POST" class="ml-5 mx-5">
-                <button class="btn btn-light text-danger" type="submit">Delete Dog Information</button>
-                <input type="hidden" name="dog_id" value="{{ dog.id }}">
-            </form>
+            <button type="button" class="btn btn-light text-info ml-5 mt-n5" data-toggle="modal" data-target="#delete_dog">Delete {{ dog.dog_name }}'s Information</button>
+
+            <!-- {# pop up for delete dog #} -->
+            <div class="modal" tabindex="-1" role="dialog" id="delete_dog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Are you sure you want to delete {{ dog.dog_name }}'s information?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="/delete_a_dog" method="POST">
+                            <button class="btn btn-danger" type="submit">Delete {{ dog.dog_name }}'s Information</button>
+                            <input type="hidden" name="dog_id" value="{{ dog.id }}">
+                            <input type="hidden" name="dog_name" value="{{ dog.dog_name }}">
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Go Back</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </div>
 

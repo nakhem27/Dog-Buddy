@@ -49,16 +49,23 @@ def dashboard():
 
     login_name = session["first_name"]
     login_id = session["user_id"]
-    past = datetime.now() - timedelta(days=1)
-    present = datetime.now()
+    current_time = datetime.utcnow().strftime('%A, %B %d, %Y')
+    print("Time Right Now: ", current_time)
 
+    # User/Dog Info
     your_dogs = db.session.query(Dog).filter(Dog.owner_id == login_id).all()
-    your_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).all()
-    your_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).all()
-    other_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id != login_id).all()
     user_info = db.session.query(User).filter(User.id == login_id).all()
+    all_users = User.query.all()
+    # Upcoming Walks
+    your_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).filter(Walk.date < current_time).all()
+    your_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).filter(Walk.date < current_time).all()
+    # Other User Walks to Join
+    other_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id != login_id).all()
+    # Past Walks Made by the User and Past Walks the User Has Joined
+    past_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).filter(Walk.date > current_time).all()
+    past_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).filter(Walk.date > current_time).all()
 
-    return render_template("dashboard.html", login_name = login_name, login_id = login_id, your_dogs = your_dogs, your_walks = your_walks, your_joined_walks = your_joined_walks, other_walks = other_walks, past = past, present = present, user_info = user_info)
+    return render_template("dashboard.html", login_name = login_name, login_id = login_id, your_dogs = your_dogs, your_walks = your_walks, your_joined_walks = your_joined_walks, other_walks = other_walks, user_info = user_info, past_walks = past_walks, past_joined_walks = past_joined_walks, all_users = all_users)
 
 def myaccount():
     login_id = session["user_id"]
