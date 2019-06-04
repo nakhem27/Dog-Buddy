@@ -40,7 +40,7 @@ Dashboard
             - Can click on dog's name to view more information
         - Random Dog Image - DogCeo API
             - Push the button for a random dog image
-            - Image width set to 300
+            - Image width set to 375
     
     -Right Side
         - Your upcoming walks
