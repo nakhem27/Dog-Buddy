@@ -52,7 +52,12 @@
             {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    <p class="text-white m-5">{{ message }}</p>
+                <div class="alert alert-white alert-dismissible fade show" role="alert">
+                    <strong>{{ message }} </strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>                 
                 {% endfor %}
             {% endif %}
             {% endwith %}
@@ -62,7 +67,7 @@
                 <h2 class="mt-5">View Walk Created By {{ first_name }} {{ last_name }}</h2>
                 <hr class="mb-3">
                 <h4>Location: {{ walk_location }}</h4>
-                <h4>When: {{ walk_date }}</h4>
+                <h4>When: {{ walk_date | strftime }}</h4>
                 <h4>Time: {{ walk_time }}</h4>
                 <h4>Dogs on Walk: {{ dogs_on_walk }}</h4>
                 <h4>Information: {{ walk_info }}</h4>

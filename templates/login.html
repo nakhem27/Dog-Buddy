@@ -16,6 +16,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/3c211a8cd7.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-light bg-light">
@@ -32,11 +33,16 @@
                         Please enter an email.
                     </div>
                 </div>
-                <div class="col mb-3">
+                <div class="col mb-3 mr-2">
                     <label for="validationCustom01">Password: </label>
-                    <input class="form-control mr-sm-2 ml-1 text-info" name="password" placeholder="Password" required>
-                    <div class="invalid-feedback mt-2">
+                    <div class="input-group bg-light rounded" id="show_hide_password">
+                    <input type="password" class="form-control mr-sm-2 ml-1 text-info" name="password" placeholder="Password" required>
+                    <div class="input-group-addon m-2">
+                        <a href="" class="text-info"><i class="fa fa-eye-slash mr-2" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="invalid-feedback">
                         Please enter a password.
+                    </div>
                     </div>
                 </div>
             </div>
@@ -53,14 +59,20 @@
             </div>
             <div class="col m-5">
                 <h1>Create a New Account</h1>
-                <p>It's free!</p>
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-                <p class="text-white">{{ message }}</p>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
+                <div class="row">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-white alert-dismissible fade show" role="alert">
+                            <strong>{{ message }} </strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>                 
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
                 <form action="/register" method="post" class="needs-validation" novalidate>
                     <div class="form-row">
                         <div class="col-md-6 mb-3">
@@ -88,30 +100,40 @@
                         </div>
                         <div class="col-md-6 mb-3">
                         <label for="validationCustomUsername">Phone Number</label>
-                        <input type="text" class="form-control text-info" id="validationCustom03" name="phone_number" placeholder="Phone Number" required>
+                        <input type="text" class="form-control text-info" id="validationCustom04" name="phone_number" placeholder="Phone Number" required>
                         <div class="invalid-feedback">
                         Please enter a valid phone number.
                         </div>
                         </div>
                         <div class="col-md-10 mb-3">
                         <label for="validationCustom01">Birthday</label>
-                        <input type="date" class="form-control text-info" id="validationCustom01" name="birthday" placeholder="birthday" required>
+                        <input type="date" class="form-control text-info" id="validationCustom05" name="birthday" placeholder="birthday" required>
                         <div class="invalid-feedback">
                             Please enter a birthday.
                         </div>
                         </div>
                         <div class="col-md-6 mb-3">
                         <label for="validationCustom01">Password</label>
-                        <input type="text" class="form-control text-info" id="validationCustom01" name="password" placeholder="Password" aria-describedby="passwordHelpBlock" required>
+                        <div class="input-group bg-light rounded" id="show_hide_password">
+                        <input type="password" class="form-control text-info border-white" id="validationCustom06" name="password" placeholder="Password" aria-describedby="passwordHelpBlock" required>
+                        <div class="input-group-addon m-2">
+                            <a href="" class="text-info"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                        </div>
                         <div class="invalid-feedback">
                             Please enter a password.
+                        </div>
                         </div>
                         </div>
                         <div class="col-md-6 mb-3">
                         <label for="validationCustom01">Confirm Password</label>
-                        <input type="text" class="form-control text-info" id="validationCustom01" name="confirm_password" placeholder="Confirm Password" aria-describedby="passwordHelpBlock" required>
+                        <div class="input-group bg-light rounded" id="show_hide_password">
+                        <input type="password" class="form-control text-info border-white" id="validationCustom07" name="confirm_password" placeholder="Confirm Password" aria-describedby="passwordHelpBlock" required>
                         <div class="invalid-feedback">
                             Please enter a password.
+                        </div>
+                        <div class="input-group-addon m-2">
+                            <a href="" class="text-info"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                        </div>
                         </div>
                         </div>
                     </div>
@@ -159,6 +181,20 @@
     </div>
 
 <script>
+    $(document).ready(function() {
+    $("#show_hide_password a").on('click', function(event) {
+        event.preventDefault();
+        if($('#show_hide_password input').attr("type") == "text"){
+            $('#show_hide_password input').attr('type', 'password');
+            $('#show_hide_password i').addClass( "fa-eye-slash" );
+            $('#show_hide_password i').removeClass( "fa-eye" );
+        }else if($('#show_hide_password input').attr("type") == "password"){
+            $('#show_hide_password input').attr('type', 'text');
+            $('#show_hide_password i').removeClass( "fa-eye-slash" );
+            $('#show_hide_password i').addClass( "fa-eye" );
+        }
+    });
+
     (function() {
         'use strict';
         window.addEventListener('load', function() {
@@ -174,6 +210,9 @@
         });
         }, false);
     })();
+
+    });
+
 </script>
 </body>
 

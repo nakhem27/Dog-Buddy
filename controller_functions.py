@@ -1,6 +1,8 @@
 from flask import Flask, render_template, redirect, flash, request, session
-from config import app, db, func, IntegrityError, bcrypt, re, datetime, timedelta
+from config import app, db, func, IntegrityError, bcrypt, re, datetime, timedelta, time
 from models import User, Dog, Walk
+from jinja2 import Environment, PackageLoader, select_autoescape
+import dateutil.parser
 
 def home():
     return render_template("login.html")
@@ -40,6 +42,13 @@ def login():
         return redirect("/")
     return redirect("/")
 
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date, fmt=None):
+    date = dateutil.parser.parse(date)
+    native = date.replace(tzinfo=None)
+    format='%A, %b %d, %Y'
+    return native.strftime(format) 
+
 def dashboard():
     try:
         login_name = session["first_name"]
@@ -49,7 +58,8 @@ def dashboard():
 
     login_name = session["first_name"]
     login_id = session["user_id"]
-    current_time = datetime.utcnow().strftime('%A, %B %d, %Y')
+    current_time = datetime.now()
+    # print(current_time.timestamp())
     print("Time Right Now: ", current_time)
 
     # User/Dog Info
@@ -57,13 +67,14 @@ def dashboard():
     user_info = db.session.query(User).filter(User.id == login_id).all()
     all_users = User.query.all()
     # Upcoming Walks
-    your_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).filter(Walk.date < current_time).all()
-    your_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).filter(Walk.date < current_time).all()
+    your_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).filter(Walk.date > current_time).order_by(Walk.date).all()
+    print(your_walks[0].Walk.date)
+    your_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).filter(Walk.date > current_time).order_by(Walk.date).all()
     # Other User Walks to Join
     other_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id != login_id).all()
     # Past Walks Made by the User and Past Walks the User Has Joined
-    past_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).filter(Walk.date > current_time).all()
-    past_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).filter(Walk.date > current_time).all()
+    past_walks = db.session.query(Walk, User).filter(Walk.planned_by_user_id == User.id).filter(User.id == login_id).filter(Walk.date < current_time).order_by(Walk.date).all()
+    past_joined_walks = db.session.query(User, Walk).join(Walk, User.user_joined_walk).filter(User.id == login_id).filter(Walk.date < current_time).order_by(Walk.date).all()
 
     return render_template("dashboard.html", login_name = login_name, login_id = login_id, your_dogs = your_dogs, your_walks = your_walks, your_joined_walks = your_joined_walks, other_walks = other_walks, user_info = user_info, past_walks = past_walks, past_joined_walks = past_joined_walks, all_users = all_users)
 
@@ -158,7 +169,7 @@ def join_walk():
 
     try:
         str(join_once_walks[0].User.id) == str(login_id)
-        flash("You already joined this Walk!")
+        flash("You already joined this walk! Please leave this walk or join another walk.")
         return redirect("/dashboard")
     except:
         existing_walk = Walk.query.get(request.form["join_walk_value"])

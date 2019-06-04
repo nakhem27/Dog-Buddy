@@ -1,0 +1,66 @@
+Presentation Notes
+
+Dog Buddy - An app for dogs and dog owners to meet up, go on walks, and meet new buddies.
+
+Created with: Python/Flask, Bootstrap 4, SQLAlchemy, DogCeo API, jQuery
+
+Login/Registration
+    + Basic Login/Registration 
+        - You can login on the top nav bar 
+        - You can only register with one unique address
+            - It will check the DB and do a session rollback if there's an integrity error
+        - You have to be 18 years old or older to join
+            - Compares today's datetime in seconds to the datetime in seconds of the birthday
+        - Password
+            - Used Font Awesome for the eye
+            - Hides password while user is typing
+                - Bootstrap/jQuery
+            - Click on the eye to reveal what you typed
+        - Modal to pop up with terms and conditions
+            - On the same page down at the bottom
+
+Dashboard
+    -Top Nav
+        - Dog Buddy and Home 
+            - redirects to the Dashboard
+        - My Account 
+            - goes to another page where you can edit your user information, your dog's information, and delete dog information
+        - Add A Dog
+            - Modal Pop Up that's at the bottom of the page pops up
+        - Create A Walk
+            - Modal Pop Up - to create a walk
+
+    -Left Side
+        - Profile Picture
+            - When user creates an account, loads a default image as their profile picture
+            - User can upload their own photo with a URL
+            - User can set photo back to default
+        - Your Dogs
+            - Shows user's dogs
+            - Can click on dog's name to view more information
+        - Random Dog Image - DogCeo API
+            - Push the button for a random dog image
+            - Image width set to 300
+    
+    -Right Side
+        - Your upcoming walks
+            - User can cancel the walk or leave other user's walks
+            - Can click on location to view more information
+        - Your past walks
+            - Shows past walks
+                - Compares present time to the time of the walk
+            - Struggles
+                - Could not compare dates at first
+                    - When user inputted a date, we did it so it would record in the database as "Thursday, May something, 2019" ... but when trying to compare the dates, it would just compare the weekday and then wouldn't look at the rest ..
+                    - So left it alone and didn't add a datetime string parse time filter ...
+                - Had to create an template filter to change how it's displayed in the html
+                    - And so it worked! because then it would compare the year, then the month, then the day ... and then the filter helped display it how we were trying to do the first time as "Thursday, May something, 2019"
+        - Join a walk
+            - Shows all walks created by other users
+            - Can't join a walk more than once
+                - You can leave the walk you joined or join another walk!
+
+    -View Walk
+        - User can edit their own walk
+            - Edit redirects back to view walk page
+        - Users can see who joined their walk

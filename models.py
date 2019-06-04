@@ -202,7 +202,8 @@ class Walk(db.Model):
         add_walk = cls(
             planned_by_user_id = add_walk_data["user_id"],
             location = add_walk_data["location"],
-            date = datetime.strptime(add_walk_data["walk_date"], '%Y-%m-%d').strftime('%A, %B %d, %Y'),
+            # date = datetime.strptime(add_walk_data["walk_date"], '%Y-%m-%d').strftime('%m-%d-%Y'),
+            date = add_walk_data["walk_date"],
             time = datetime.strptime(add_walk_data["walk_time"], '%H:%M').strftime('%I:%M %p'), 
             dogs = add_walk_data["dogs"],
             walk_info = add_walk_data["walk_info"]
@@ -216,7 +217,7 @@ class Walk(db.Model):
     def edit_walk(cls, edit_walk_data):
         edit_walk = Walk.query.get(edit_walk_data["edit_walk_value"])
         edit_walk.location = edit_walk_data["location"]
-        edit_walk.date = datetime.strptime(edit_walk_data["walk_date"], '%Y-%m-%d').strftime('%A, %B %d, %Y')
+        edit_walk.date = edit_walk_data["walk_date"]
         edit_walk.time = datetime.strptime(edit_walk_data["walk_time"], '%H:%M').strftime('%I:%M %p')
         edit_walk.dogs = edit_walk_data["dogs"]
         edit_walk.walk_info = edit_walk_data["walk_info"]
