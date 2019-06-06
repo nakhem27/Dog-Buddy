@@ -52,7 +52,7 @@
     <div class="container-fluid bg-info">
         <div class="row ml-5">
             <!-- {# anything in left side column goes here #} -->
-            <div class="col-sm-4">
+            <div class="col-sm-4 border-right">
                 {% for user in user_info %}
                 <img src="{{ user.image }}" class="mt-5 ml-4 rounded border border-secondary" alt="user_picture" width="375">
                 <div class="row ml-5">
@@ -100,7 +100,7 @@
             <!-- {# end of left side div #} -->
 
             <!-- {# anything in right side column goes here #} -->
-            <div class="col-sm-8">
+            <div class="col-8">
                 <h1 class="m-5">Welcome Back {{ login_name }}!</h1>
                 <div class="row">
                     {% with messages = get_flashed_messages() %}
